@@ -2,25 +2,21 @@ import typing
 
 import strawberry
 
-
-@strawberry.type
-class Book:
-    title: str
-    author: str
-
-
-def get_books():
-    return [
-        Book(
-            title="The Great Gatsby",
-            author="F. Scott Fitzgerald",
-        ),
-    ]
+from library.types import (
+    Author,
+    Book,
+    get_authors,
+    get_books_for_author,
+)
 
 
 @strawberry.type
 class Query:
-    books: typing.List[Book] = strawberry.field(resolver=get_books)
+    authors: typing.List[Author] = strawberry.field(resolver=get_authors)
+    books: typing.List[Book] = strawberry.field(resolver=get_books_for_author)
 
 
-schema = strawberry.Schema(query=Query)
+schema = strawberry.Schema(
+    query=Query,
+    config=strawberry.schema.config.StrawberryConfig(auto_camel_case=True),
+)
