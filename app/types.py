@@ -18,10 +18,16 @@ def get_authors(root) -> typing.List["Author"]:
 @strawberry.type
 class Book:
     title: str
-    author: "Author" = strawberry.field(resolver=get_author_for_book)
+    author: "Author"  # = strawberry.field(resolver=get_author_for_book)
 
 
 @strawberry.type
 class Author:
     name: str
     books: typing.List[Book] = strawberry.field(resolver=get_books_for_author)
+
+
+@strawberry.type
+class Fruit:
+    id: strawberry.ID
+    weight: float
