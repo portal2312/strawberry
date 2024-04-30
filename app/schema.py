@@ -1,7 +1,7 @@
 import strawberry
 
-from app.mutations import Mutation
-from app.queries import Query
+from .mutations import Mutation
+from .queries import Query
 
 schema = strawberry.Schema(
     query=Query,

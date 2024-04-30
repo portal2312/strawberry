@@ -5,7 +5,16 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Python 디버거: 모듈",
+      "name": "Python: Django",
+      "type": "debugpy",
+      "request": "launch",
+      "args": ["runserver"],
+      "django": true,
+      "autoStartBrowser": false,
+      "program": "${workspaceFolder}/manage.py"
+    },
+    {
+      "name": "Python: strawberry",
       "type": "debugpy",
       "request": "launch",
       "module": "strawberry",

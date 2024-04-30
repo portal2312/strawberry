@@ -2,7 +2,7 @@ import typing
 
 import strawberry
 
-from .types import Author, Book, Fruit, get_authors, get_books_for_author
+from .types import Author, Book, get_authors, get_books_for_author
 
 FRUITS = [
     "Strawberry",
@@ -15,7 +15,6 @@ FRUITS = [
 class Query:
     authors: typing.List[Author] = strawberry.field(resolver=get_authors)
     books: typing.List[Book] = strawberry.field(resolver=get_books_for_author)
-    fruit: Fruit = strawberry.field()
 
     @strawberry.field
     def hello(self) -> str:
