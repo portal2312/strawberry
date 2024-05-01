@@ -17,8 +17,8 @@ class Query:
     books: typing.List[Book] = strawberry.field(resolver=get_books_for_author)
 
     @strawberry.field
-    def hello(self) -> str:
-        return "hello"
+    def hello(self, info: strawberry.Info) -> str:
+        return "world"
 
     @strawberry.field
     def fruit(self, startswith: str) -> str | None:

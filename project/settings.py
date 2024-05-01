@@ -25,18 +25,25 @@ SECRET_KEY = "django-insecure-rz5*e!r+dnj+y#*++s=4g$uw#of85o+^n_-z7mi#_@47#euh!i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    # channels Installation: MUST first line
+    # https://channels.readthedocs.io/en/latest/installation.html
+    "daphne",
+    # Django Apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # strawberry-graphql: Integrations/Django/Async Django
+    # https://strawberry.rocks/docs/integrations/django#async-django
+    "strawberry_django",
 ]
 
 MIDDLEWARE = [
@@ -121,3 +128,7 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# channels Installation
+# https://channels.readthedocs.io/en/latest/installation.html
+ASGI_APPLICATION = "project.asgi.application"
