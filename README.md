@@ -10,3 +10,6 @@
   1. must support ASGI and websockets or use the AIOHTTP integration, install packages: `django`, `channels`, `daphne`
   2. [Update urls.py for Django](https://strawberry.rocks/docs/integrations/django)
   3. [Update asgi.py for Django + Channels](https://strawberry.rocks/docs/general/subscriptions#django--channels)
+- [Mypy](https://strawberry.rocks/docs/editors/mypy)
+  - [django-stubs](https://github.com/typeddjango/django-stubs)
+  - [Common Issue](https://mypy.readthedocs.io/en/stable/common_issues.html)

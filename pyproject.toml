@@ -1,0 +1,5 @@
+[tool.mypy]
+plugins = ["mypy_django_plugin.main", "strawberry.ext.mypy_plugin"]
+
+[tool.django-stubs]
+django_settings_module = "project.settings"

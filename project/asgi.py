@@ -25,5 +25,5 @@ from .schema import schema  # noqa: E402
 
 application = GraphQLProtocolTypeRouter(
     schema,
-    django_application=django_asgi_app,
+    django_application=django_asgi_app,  # type: ignore
 )
