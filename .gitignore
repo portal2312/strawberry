@@ -1,5 +1,18 @@
+# Default virtual environment directory name for Python.
 .venv
+
+# Cache directory name for Python.
 **/__pycache__
+
+# Cache directory name for Ruff.
 **/.ruff_cache
+
+# Default sqlite database file name for Django.
 db.sqlite3
+
+# Default staticfile directory name for Django.
+# https://docs.djangoproject.com/en/5.0/ref/contrib/staticfiles/
+**/staticfiles
+
+# Test file name for jupyer nootbook.
 test.ipynb

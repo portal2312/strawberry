@@ -1,16 +1,15 @@
+"""App app subscriptions."""
+
 import asyncio
 import asyncio.subprocess as subprocess
 from asyncio import streams
 from typing import Any, AsyncGenerator, AsyncIterator, Coroutine, Optional
 
 import strawberry
-from django.contrib.auth.models import User
-from django.core.exceptions import PermissionDenied
 
 
 async def wait_for_call(coro: Coroutine[Any, Any, bytes]) -> Optional[bytes]:
-    """
-    wait_for_call calls the supplied coroutine in a wait_for block.
+    r"""Wait_for_call calls the supplied coroutine in a wait_for block.
 
     This mitigates cases where the coroutine doesn't yield until it has
     completed its task. In this case, reading a line from a StreamReader; if
@@ -19,14 +18,11 @@ async def wait_for_call(coro: Coroutine[Any, Any, bytes]) -> Optional[bytes]:
     try:
         return await asyncio.wait_for(coro(), timeout=0.1)
     except asyncio.TimeoutError:
-        pass
+        return None
 
 
 async def lines(stream: streams.StreamReader) -> AsyncIterator[str]:
-    """
-    lines reads all lines from the provided stream, decoding them as UTF-8
-    strings.
-    """
+    """Lines reads all lines from the provided stream, decoding them as UTF-8 strings."""
     while True:
         b = await wait_for_call(stream.readline)
         if b:
@@ -36,9 +32,7 @@ async def lines(stream: streams.StreamReader) -> AsyncIterator[str]:
 
 
 async def exec_proc(target: int) -> subprocess.Process:
-    """
-    exec_proc starts a sub process and returns the handle to it.
-    """
+    """exec_proc starts a sub process and returns the handle to it."""
     return await asyncio.create_subprocess_exec(
         "/bin/bash",
         "-c",
@@ -48,31 +42,34 @@ async def exec_proc(target: int) -> subprocess.Process:
 
 
 async def tail(proc: subprocess.Process) -> AsyncGenerator[str, None]:
-    """
-    tail reads from stdout until the process finishes
-    """
+    """Tail reads from stdout until the process finishes."""
     # Note: race conditions are possible here since we're in a subprocess. In
     # this case the process can finish between the loop predicate and the call
     # to read a line from stdout. This is a good example of why you need to
     # be defensive by using asyncio.wait_for in wait_for_call().
     while proc.returncode is None:
-        async for l in lines(proc.stdout):
-            yield l
+        async for line in lines(proc.stdout):
+            yield line
     else:
         # read anything left on the pipe after the process has finished
-        async for l in lines(proc.stdout):
-            yield l
+        async for line in lines(proc.stdout):
+            yield line
 
 
 @strawberry.type
 class Subscription:
+    """App app subscription class."""
+
     @strawberry.subscription
     async def run_command(
         self, info: strawberry.Info, target: int = 100
     ) -> AsyncGenerator[str, None]:
-        user: User = info.context.get("user")
-        if user and user.is_authenticated:
-            proc = await exec_proc(target)
-            return tail(proc)
-        else:
-            raise PermissionDenied("권한이 없습니다.")
+        """Run command."""
+        # user: User = info.context.get("user")
+        # if user and user.is_authenticated:
+        #     proc = await exec_proc(target)
+        #     return tail(proc)
+        # else:
+        #     raise PermissionDenied("권한이 없습니다.")
+        proc = await exec_proc(target)
+        return tail(proc)

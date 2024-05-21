@@ -1,42 +1,21 @@
-import typing
+"""App app queries."""
 
 import strawberry
+import strawberry_django
 
-from .types import Author, Book, get_authors, get_books_for_author
-
-FRUITS = [
-    "Strawberry",
-    "Apple",
-    "Orange",
-]
+from .types import Color, Fruit
 
 
 @strawberry.type
 class Query:
-    authors: typing.List[Author] = strawberry.field(resolver=get_authors)
-    books: typing.List[Book] = strawberry.field(resolver=get_books_for_author)
+    """App app root query class."""
+
+    fruit: Fruit = strawberry_django.field()
+    fruits: list[Fruit] = strawberry_django.field()
+    color: Color = strawberry_django.field()
+    colors: list[Color] = strawberry_django.field()
 
     @strawberry.field
     def hello(self, info: strawberry.Info) -> str:
+        """Hello world."""
         return "world"
-
-    @strawberry.field
-    def fruit(self, startswith: str) -> str | None:
-        if startswith:
-            for fruit in FRUITS:
-                if fruit.lower().startswith(startswith.lower()):
-                    return fruit
-
-    @strawberry.field
-    def fruits(
-        self,
-        is_tasty: typing.Annotated[
-            bool | None,
-            strawberry.argument(
-                description="Filters out fruits by whenever they're tasty or not",
-                deprecation_reason="isTasty argument is deprecated, "
-                "use fruits(taste:SWEET) instead",
-            ),
-        ] = None,
-    ) -> list[str]:
-        return FRUITS

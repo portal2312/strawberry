@@ -24,8 +24,3 @@ EDITOR INTEGRATION:
   - Install [django-stubs](https://github.com/typeddjango/django-stubs)
   - See [Common Issue](https://mypy.readthedocs.io/en/stable/common_issues.html)
 - ~~Visual Studio Code~~: `Mypy` 를 사용하므로 무시
-
-INTEGRATIONS:
-
-- [Django](https://strawberry.rocks/docs/integrations/django)
-  - Setup [strawberry-django](https://github.com/strawberry-graphql/strawberry-django)

@@ -1,28 +1,27 @@
-import strawberry
+"""Project Root Schema."""
 
-from app.mutations import Mutation as AppMutation
+import strawberry
+from strawberry_django.optimizer import DjangoOptimizerExtension
+
 from app.queries import Query as AppQuery
 from app.subscriptions import Subscription as AppSubscription
 
 
 @strawberry.type
 class Query(AppQuery):
-    """Root Query"""
-
-
-@strawberry.type
-class Mutation(AppMutation):
-    """Root Mutation"""
+    """Root query class."""
 
 
 @strawberry.type
 class Subscription(AppSubscription):
-    """Root Subscription"""
+    """Root subscription class."""
 
 
 # Root Schema
 schema = strawberry.Schema(
     query=Query,
-    mutation=Mutation,
     subscription=Subscription,
+    extensions=[
+        DjangoOptimizerExtension,  # not required, but highly recommended
+    ],
 )

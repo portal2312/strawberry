@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
-    # channels Installation: MUST first line
+    # channels Installation: MUST first line.
     # https://channels.readthedocs.io/en/latest/installation.html
     "daphne",
     # Django Apps
@@ -41,9 +41,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # strawberry-graphql: Integrations/Django/Async Django
+    # strawberry-graphql: Integrations/Django/Async Django.
     # https://strawberry.rocks/docs/integrations/django#async-django
     "strawberry_django",
+    # Local apps.
+    "app",
 ]
 
 MIDDLEWARE = [
@@ -124,11 +126,11 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-# Default primary key field type
+# Default primary key field type.
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# channels Installation
+# channels Installation.
 # https://channels.readthedocs.io/en/latest/installation.html
 ASGI_APPLICATION = "project.asgi.application"
