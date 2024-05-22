@@ -60,9 +60,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # django-debug-toolbar: Add the Middleware.
-    # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#add-the-middleware
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # Support django-debug-toolbar at strawberry-graphql-django.
+    # https://strawberry-graphql.github.io/strawberry-django/integrations/debug-toolbar/
+    "strawberry_django.middlewares.debug_toolbar.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "project.urls"
@@ -151,3 +151,9 @@ INTERNAL_IPS = [
 # The absolute path to the directory where collectstatic will collect static files for deployment.
 # https://docs.djangoproject.com/en/5.0/ref/settings/#std-setting-STATIC_ROOT
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# https://strawberry-graphql.github.io/strawberry-django/guide/settings/#strawberry_django
+STRAWBERRY_DJANGO = {
+    "FIELD_DESCRIPTION_FROM_HELP_TEXT": True,
+    "TYPE_DESCRIPTION_FROM_MODEL_DOCSTRING": True,
+}
