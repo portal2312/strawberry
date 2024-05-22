@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ["*"]
 INSTALLED_APPS = [
     # channels Installation: MUST first line.
     # https://channels.readthedocs.io/en/latest/installation.html
+    # FIXME: Not display the debug_toolbar toolbar for Daphne.
     "daphne",
     # Django Apps
     "django.contrib.admin",
@@ -41,6 +42,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # django-debug-toolbar: Install the App.
+    # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#install-the-app
+    "debug_toolbar",
     # strawberry-graphql: Integrations/Django/Async Django.
     # https://strawberry.rocks/docs/integrations/django#async-django
     "strawberry_django",
@@ -56,6 +60,10 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # django-debug-toolbar support on strawberry_django.
+    # https://github.com/strawberry-graphql/strawberry-django/blob/main/examples/django/app/settings.py#L29
+    # https://blb-ventures.github.io/strawberry-django-plus/debug-toolbar/
+    "strawberry_django.middlewares.debug_toolbar.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "project.urls"
@@ -134,3 +142,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # channels Installation.
 # https://channels.readthedocs.io/en/latest/installation.html
 ASGI_APPLICATION = "project.asgi.application"
+
+# django-debug-toolbar: Configure Internal IPs.
+# https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#configure-internal-ips
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+# The absolute path to the directory where collectstatic will collect static files for deployment.
+# https://docs.djangoproject.com/en/5.0/ref/settings/#std-setting-STATIC_ROOT
+STATIC_ROOT = BASE_DIR / "staticfiles"
