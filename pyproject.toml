@@ -50,6 +50,10 @@ exclude = [
     "venv",
 ]
 
+# https://docs.astral.sh/ruff/faq/#does-ruff-support-jupyter-notebooks
+# https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff
+extend-include = ["*.ipynb"]
+
 # Same as Black.
 # line-length = 88
 # indent-width = 4
