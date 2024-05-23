@@ -60,10 +60,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # django-debug-toolbar support on strawberry_django.
-    # https://github.com/strawberry-graphql/strawberry-django/blob/main/examples/django/app/settings.py#L29
-    # https://blb-ventures.github.io/strawberry-django-plus/debug-toolbar/
-    "strawberry_django.middlewares.debug_toolbar.DebugToolbarMiddleware",
+    # django-debug-toolbar: Add the Middleware.
+    # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#add-the-middleware
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "project.urls"

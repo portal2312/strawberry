@@ -10,6 +10,7 @@ class Color(models.Model):
         max_length=20,
         help_text="이름",
     )
+    description = models.CharField(max_length=128, blank=True)
 
     def __str__(self) -> str:
         """이름."""

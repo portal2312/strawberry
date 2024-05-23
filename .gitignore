@@ -16,3 +16,6 @@ db.sqlite3
 
 # Test file name for jupyer nootbook.
 *.ipynb
+
+# Generated strawberry graphql export schema file name.
+schema.graphql
