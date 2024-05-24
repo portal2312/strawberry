@@ -1,3 +1,52 @@
+# ---
+# Poetry
+# https://python-poetry.org/docs/basic-usage/#initialising-a-pre-existing-project
+[tool.poetry]
+name = "strawberry-demo"
+version = "0.1.0"
+description = ""
+authors = ["portal2312 <portal2312@gmail.com>"]
+readme = "README.md"
+# https://python-poetry.org/docs/basic-usage/#operating-modes
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^5.0.6"
+django-debug-toolbar = "^4.3.0"
+channels = "^4.1.0"
+daphne = "^4.1.2"
+strawberry-graphql = "^0.230.0"
+strawberry-graphql-django = "^0.40.0"
+gunicorn = "^22.0.0"
+uvicorn = "^0.29.0"
+django-choices-field = "^2.3.0"
+
+[tool.poetry.group.dev.dependencies]
+debugpy = "^1.8.1"
+mypy = "^1.10.0"
+django-stubs = "^5.0.0"
+ruff = "^0.4.5"
+jupyterlab = "^4.2.0"
+
+[tool.poetry.group.test]
+optional = true
+
+[tool.poetry.group.test.dependencies]
+pytest = "*"
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+mkdocs = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+# ---
 # Mypy
 # https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml-file
 [tool.mypy]
@@ -10,15 +59,18 @@ plugins = [
     "strawberry.ext.mypy_plugin"
 ]
 
+
+# ---
 # django-stubs
 # https://github.com/typeddjango/django-stubs
 [tool.django-stubs]
 django_settings_module = "project.settings"
 
+
+# ---
 # Ruff
 # https://docs.astral.sh/ruff/configuration/
 # https://docs.astral.sh/ruff/settings/#lintpydocstyle
-
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
 exclude = [

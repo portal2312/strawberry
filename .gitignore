@@ -4,7 +4,8 @@
 # Cache directory name for Python.
 **/__pycache__
 
-# Cache directory name for Ruff.
+# Default cache directory name for Ruff.
+# https://docs.astral.sh/ruff/settings/#cache-dir
 **/.ruff_cache
 
 # Default sqlite database file name for Django.
@@ -19,3 +20,7 @@ db.sqlite3
 
 # Generated strawberry graphql export schema file name.
 schema.graphql
+
+# Default cache directory name for pytest.
+# https://docs.pytest.org/en/7.1.x/reference/customize.html#initialization-determining-rootdir-and-configfile
+**/.pytest_cache
