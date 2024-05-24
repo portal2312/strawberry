@@ -1,0 +1,11 @@
+[
+{
+  "model": "app.fruit",
+  "pk": 1,
+  "fields": {
+    "name": "Apple",
+    "category": "citrus",
+    "color": 1
+  }
+}
+]

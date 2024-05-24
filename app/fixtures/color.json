@@ -1,0 +1,26 @@
+[
+{
+  "model": "app.color",
+  "pk": 1,
+  "fields": {
+    "name": "Red",
+    "description": ""
+  }
+},
+{
+  "model": "app.color",
+  "pk": 2,
+  "fields": {
+    "name": "Green",
+    "description": ""
+  }
+},
+{
+  "model": "app.color",
+  "pk": 3,
+  "fields": {
+    "name": "Blue",
+    "description": ""
+  }
+}
+]

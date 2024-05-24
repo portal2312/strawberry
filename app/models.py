@@ -1,6 +1,14 @@
 """App models."""
 
 from django.db import models
+from django_choices_field import TextChoicesField
+
+
+class FruitCategory(models.TextChoices):
+    """과일 종류."""
+
+    CITRUS = "citrus", "Citrus"
+    BERRY = "berry", "Berry"
 
 
 class Color(models.Model):
@@ -24,6 +32,11 @@ class Fruit(models.Model):
         max_length=20,
         help_text="이름",
     )
+    category = TextChoicesField(
+        choices_enum=FruitCategory,
+        help_text="종류",
+    )
+    # Relation Fields.
     color = models.ForeignKey(
         "Color",
         on_delete=models.CASCADE,
