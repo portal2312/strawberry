@@ -11,15 +11,32 @@
       "args": ["runserver"],
       "django": true,
       "autoStartBrowser": false,
-      "program": "${workspaceFolder}/manage.py"
-    },
-    {
-      "name": "Python: strawberry",
-      "type": "debugpy",
-      "request": "launch",
-      "module": "strawberry",
       "justMyCode": false,
-      "args": ["server", "--port", "8001", "schema"]
+      "program": "${workspaceFolder}/manage.py"
     }
+    // {
+    //   "name": "Python: strawberry",
+    //   "type": "debugpy",
+    //   "request": "launch",
+    //   "module": "strawberry",
+    //   "justMyCode": false,
+    //   "args": ["server", "--port", "8001", "schema"]
+    // },
+    // {
+    //   "name": "Python: Django",
+    //   "type": "debugpy",
+    //   "request": "launch",
+    //   "module": "gunicorn",
+    //   "args": [
+    //     "--bind",
+    //     "127.0.0.1:8000",
+    //     "project.asgi:application",
+    //     "-k",
+    //     "uvicorn.workers.UvicornWorker"
+    //   ],
+    //   "django": true,
+    //   "autoStartBrowser": false,
+    //   "justMyCode": false
+    ///}
   ]
 }
