@@ -8,6 +8,7 @@ import strawberry
 from strawberry.types.types import StrawberryObjectDefinition
 from strawberry_django.optimizer import DjangoOptimizerExtension
 
+from app.mutations import Mutation as AppMutation
 from app.queries import Query as AppQuery
 from app.subscriptions import Subscription as AppSubscription
 
@@ -15,6 +16,11 @@ from app.subscriptions import Subscription as AppSubscription
 @strawberry.type
 class Query(AppQuery):
     """Root query class."""
+
+
+@strawberry.type
+class Mutation(AppMutation):
+    """Root mutation class."""
 
 
 @strawberry.type
@@ -59,6 +65,7 @@ class PublicSchema(strawberry.Schema):
 # Root Schema
 schema = PublicSchema(
     query=Query,
+    mutation=Mutation,
     subscription=Subscription,
     extensions=[
         DjangoOptimizerExtension,  # not required, but highly recommended

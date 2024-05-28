@@ -1,8 +1,10 @@
 """App app mutations."""
 
-# import strawberry
+from typing import Annotated, Union
 
-# from .types import Color
+import strawberry
+
+from .types import User
 
 # @strawberry.type
 # class FruitMutations:
@@ -23,14 +25,39 @@
 #     return Fruit(id=id, weight=weight)
 
 
-# @strawberry.type
-# class Mutation:
-#     """App app root mutation class."""
+@strawberry.type
+class LoginSuccess:
+    """Login success."""
 
-#     def save_color(self, name: str) -> Color:
-#         """Create 색상."""
-#         return Color(name=name)
+    user: User
 
-# @strawberry.field
-# def fruit(self) -> FruitMutations:
-#     return FruitMutations()
+
+@strawberry.type
+class LoginError:
+    """Login error."""
+
+    message: str
+
+
+LoginResult = Annotated[
+    Union[LoginSuccess, LoginError], strawberry.union("LoginResult")
+]
+
+
+@strawberry.type
+class Mutation:
+    """App app root mutation class."""
+
+    @strawberry.field
+    def strawberry_login(self, username: str, password: str) -> LoginResult:
+        """Login."""
+        if username != password:
+            return LoginError(message="Something went wrong")
+        return LoginSuccess(
+            user=User(
+                id="1",
+                username=username,
+                email=f"{username}@gmail.com",
+                password=password,
+            )
+        )

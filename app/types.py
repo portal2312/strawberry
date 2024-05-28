@@ -5,6 +5,7 @@ References:
 """
 
 import strawberry_django
+from django.contrib.auth import get_user_model
 from strawberry import auto
 
 # from strawberry_django.auth.utils import get_current_user
@@ -54,3 +55,13 @@ class Fruit:
     name: auto
     category: auto
     color: "Color"
+
+
+@strawberry_django.type(get_user_model())
+class User:
+    """User model type."""
+
+    id: auto
+    username: auto
+    email: auto
+    password: auto

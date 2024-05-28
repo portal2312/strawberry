@@ -3,7 +3,7 @@
 import strawberry
 import strawberry_django
 
-from .types import Berry, Color, Fruit
+from .types import Berry, Color, Fruit, User
 
 
 @strawberry.type
@@ -15,6 +15,8 @@ class Query:
     colors: list[Color] = strawberry_django.field()
     fruit: Fruit = strawberry_django.field()
     fruits: list[Fruit] = strawberry_django.field()
+    user: User = strawberry_django.field()
+    users: list[User] = strawberry_django.field()
 
     @strawberry.field
     def hello(self, info: strawberry.Info) -> str:

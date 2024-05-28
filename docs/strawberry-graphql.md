@@ -22,6 +22,7 @@ Table of Contents:
       - [~~Visual Studio Code~~](#visual-studio-code)
   - [GUIDES](#guides)
     - [Schema export](#schema-export)
+    - [~~Authentication~~](#authentication)
   - [TYPE](#type)
     - [Schema](#schema)
       - [API reference](#api-reference)
@@ -90,6 +91,15 @@ python manage.py export_schema project.schema > schema.graphql
 ```
 
 Refer to [here](https://strawberry.rocks/docs/guides/schema-export).
+
+### ~~Authentication~~
+
+예제:
+
+- 동기식으로 동작합니다.
+- Union 활용을 하지만 결과에 대한 field 접근을 할 수 없습니다.
+
+Refer to [Authentication](https://strawberry.rocks/docs/guides/authentication)
 
 ## TYPE
 
