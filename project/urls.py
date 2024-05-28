@@ -26,8 +26,12 @@ from .schema import schema
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # strawberry-graphql: Integrations/Django/Async Django
+    # strawberry-django: Serving WSGI
+    # https://strawberry-graphql.github.io/strawberry-django/guide/views/#serving-wsgi-sync
+    # path("graphql/", GraphQLView.as_view(schema=schema)),
+    # strawberry-django: Serving as ASGI (async)
     # https://strawberry.rocks/docs/integrations/django#async-django
+    # https://strawberry-graphql.github.io/strawberry-django/guide/views/#serving-as-asgi-async
     path("graphql/", AsyncGraphQLView.as_view(schema=schema)),
     # django-debug-toolbar: Add the URLs
     # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#add-the-urls
