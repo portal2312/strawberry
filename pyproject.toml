@@ -28,6 +28,8 @@ mypy = "^1.10.0"
 django-stubs = "^5.0.0"
 ruff = "^0.4.5"
 jupyterlab = "^4.2.0"
+pyyaml = "^6.0.1"
+bandit = {extras = ["toml"], version = "^1.7.8"}
 
 [tool.poetry.group.test]
 optional = true
@@ -45,7 +47,6 @@ mkdocs = "*"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-
 # ---
 # Mypy
 # https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml-file
@@ -59,13 +60,11 @@ plugins = [
     "strawberry.ext.mypy_plugin"
 ]
 
-
 # ---
 # django-stubs
 # https://github.com/typeddjango/django-stubs
 [tool.django-stubs]
 django_settings_module = "project.settings"
-
 
 # ---
 # Ruff
@@ -100,8 +99,8 @@ exclude = [
     "node_modules",
     "site-packages",
     "venv",
+    "**/migrations",
 ]
-
 # https://docs.astral.sh/ruff/faq/#does-ruff-support-jupyter-notebooks
 # https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff
 extend-include = ["*.ipynb"]
@@ -109,7 +108,6 @@ extend-include = ["*.ipynb"]
 # Same as Black.
 # line-length = 88
 # indent-width = 4
-
 [tool.ruff.lint]
 # Enable all `pydocstyle` rules, limiting to those that adhere to the
 # Google convention via `convention = "google"`, below.
@@ -118,38 +116,30 @@ extend-include = ["*.ipynb"]
 # Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
 # McCabe complexity (`C901`) by default.
 select = ["D", "E4", "E7", "E9", "F"]
-
 # On top of the Google convention, disable `D417`, which requires
 # documentation for every function parameter.
 ignore = ["D212", "D417"]
-
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
 unfixable = []
-
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.ruff.format]
 # Like Black, use double quotes for strings.
 quote-style = "double"
-
 # Like Black, indent with spaces, rather than tabs.
 indent-style = "space"
-
 # Like Black, respect magic trailing commas.
 skip-magic-trailing-comma = false
-
 # Like Black, automatically detect the appropriate line ending.
 line-ending = "auto"
-
 # Enable auto-formatting of code examples in docstrings. Markdown,
 # reStructuredText code/literal blocks and doctests are all supported.
 #
 # This is currently disabled by default, but it is planned for this
 # to be opt-out in the future.
 docstring-code-format = false
-
 # Set the line length limit used when formatting code snippets in
 # docstrings.
 #
@@ -159,3 +149,362 @@ docstring-code-line-length = "dynamic"
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+# ---
+# Bandit
+# https://bandit.readthedocs.io/en/latest/config.html
+[tool.bandit]
+
+[tool.bandit.any_other_function_with_shell_equals_true]
+no_shell = [
+    "os.execl",
+    "os.execle",
+    "os.execlp",
+    "os.execlpe",
+    "os.execv",
+    "os.execve",
+    "os.execvp",
+    "os.execvpe",
+    "os.spawnl",
+    "os.spawnle",
+    "os.spawnlp",
+    "os.spawnlpe",
+    "os.spawnv",
+    "os.spawnve",
+    "os.spawnvp",
+    "os.spawnvpe",
+    "os.startfile",
+]
+shell = [
+    "os.system",
+    "os.popen",
+    "os.popen2",
+    "os.popen3",
+    "os.popen4",
+    "popen2.popen2",
+    "popen2.popen3",
+    "popen2.popen4",
+    "popen2.Popen3",
+    "popen2.Popen4",
+    "commands.getoutput",
+    "commands.getstatusoutput",
+    "subprocess.getoutput",
+    "subprocess.getstatusoutput",
+]
+subprocess = [
+    "subprocess.Popen",
+    "subprocess.call",
+    "subprocess.check_call",
+    "subprocess.check_output",
+    "subprocess.run",
+]
+
+[tool.bandit.assert_used]
+skips = []
+
+[tool.bandit.hardcoded_tmp_directory]
+tmp_dirs = ["/tmp", "/var/tmp", "/dev/shm"]
+
+[tool.bandit.linux_commands_wildcard_injection]
+no_shell = [
+    "os.execl",
+    "os.execle",
+    "os.execlp",
+    "os.execlpe",
+    "os.execv",
+    "os.execve",
+    "os.execvp",
+    "os.execvpe",
+    "os.spawnl",
+    "os.spawnle",
+    "os.spawnlp",
+    "os.spawnlpe",
+    "os.spawnv",
+    "os.spawnve",
+    "os.spawnvp",
+    "os.spawnvpe",
+    "os.startfile",
+]
+shell = [
+    "os.system",
+    "os.popen",
+    "os.popen2",
+    "os.popen3",
+    "os.popen4",
+    "popen2.popen2",
+    "popen2.popen3",
+    "popen2.popen4",
+    "popen2.Popen3",
+    "popen2.Popen4",
+    "commands.getoutput",
+    "commands.getstatusoutput",
+    "subprocess.getoutput",
+    "subprocess.getstatusoutput",
+]
+subprocess = [
+    "subprocess.Popen",
+    "subprocess.call",
+    "subprocess.check_call",
+    "subprocess.check_output",
+    "subprocess.run",
+]
+
+[tool.bandit.ssl_with_bad_defaults]
+bad_protocol_versions = [
+    "PROTOCOL_SSLv2",
+    "SSLv2_METHOD",
+    "SSLv23_METHOD",
+    "PROTOCOL_SSLv3",
+    "PROTOCOL_TLSv1",
+    "SSLv3_METHOD",
+    "TLSv1_METHOD",
+    "PROTOCOL_TLSv1_1",
+    "TLSv1_1_METHOD",
+]
+
+[tool.bandit.ssl_with_bad_version]
+bad_protocol_versions = [
+    "PROTOCOL_SSLv2",
+    "SSLv2_METHOD",
+    "SSLv23_METHOD",
+    "PROTOCOL_SSLv3",
+    "PROTOCOL_TLSv1",
+    "SSLv3_METHOD",
+    "TLSv1_METHOD",
+    "PROTOCOL_TLSv1_1",
+    "TLSv1_1_METHOD",
+]
+
+[tool.bandit.start_process_with_a_shell]
+no_shell = [
+    "os.execl",
+    "os.execle",
+    "os.execlp",
+    "os.execlpe",
+    "os.execv",
+    "os.execve",
+    "os.execvp",
+    "os.execvpe",
+    "os.spawnl",
+    "os.spawnle",
+    "os.spawnlp",
+    "os.spawnlpe",
+    "os.spawnv",
+    "os.spawnve",
+    "os.spawnvp",
+    "os.spawnvpe",
+    "os.startfile",
+]
+shell = [
+    "os.system",
+    "os.popen",
+    "os.popen2",
+    "os.popen3",
+    "os.popen4",
+    "popen2.popen2",
+    "popen2.popen3",
+    "popen2.popen4",
+    "popen2.Popen3",
+    "popen2.Popen4",
+    "commands.getoutput",
+    "commands.getstatusoutput",
+    "subprocess.getoutput",
+    "subprocess.getstatusoutput",
+]
+subprocess = [
+    "subprocess.Popen",
+    "subprocess.call",
+    "subprocess.check_call",
+    "subprocess.check_output",
+    "subprocess.run",
+]
+
+[tool.bandit.start_process_with_no_shell]
+no_shell = [
+    "os.execl",
+    "os.execle",
+    "os.execlp",
+    "os.execlpe",
+    "os.execv",
+    "os.execve",
+    "os.execvp",
+    "os.execvpe",
+    "os.spawnl",
+    "os.spawnle",
+    "os.spawnlp",
+    "os.spawnlpe",
+    "os.spawnv",
+    "os.spawnve",
+    "os.spawnvp",
+    "os.spawnvpe",
+    "os.startfile",
+]
+shell = [
+    "os.system",
+    "os.popen",
+    "os.popen2",
+    "os.popen3",
+    "os.popen4",
+    "popen2.popen2",
+    "popen2.popen3",
+    "popen2.popen4",
+    "popen2.Popen3",
+    "popen2.Popen4",
+    "commands.getoutput",
+    "commands.getstatusoutput",
+    "subprocess.getoutput",
+    "subprocess.getstatusoutput",
+]
+subprocess = [
+    "subprocess.Popen",
+    "subprocess.call",
+    "subprocess.check_call",
+    "subprocess.check_output",
+    "subprocess.run",
+]
+
+[tool.bandit.start_process_with_partial_path]
+no_shell = [
+    "os.execl",
+    "os.execle",
+    "os.execlp",
+    "os.execlpe",
+    "os.execv",
+    "os.execve",
+    "os.execvp",
+    "os.execvpe",
+    "os.spawnl",
+    "os.spawnle",
+    "os.spawnlp",
+    "os.spawnlpe",
+    "os.spawnv",
+    "os.spawnve",
+    "os.spawnvp",
+    "os.spawnvpe",
+    "os.startfile",
+]
+shell = [
+    "os.system",
+    "os.popen",
+    "os.popen2",
+    "os.popen3",
+    "os.popen4",
+    "popen2.popen2",
+    "popen2.popen3",
+    "popen2.popen4",
+    "popen2.Popen3",
+    "popen2.Popen4",
+    "commands.getoutput",
+    "commands.getstatusoutput",
+    "subprocess.getoutput",
+    "subprocess.getstatusoutput",
+]
+subprocess = [
+    "subprocess.Popen",
+    "subprocess.call",
+    "subprocess.check_call",
+    "subprocess.check_output",
+    "subprocess.run",
+]
+
+[tool.bandit.subprocess_popen_with_shell_equals_true]
+no_shell = [
+    "os.execl",
+    "os.execle",
+    "os.execlp",
+    "os.execlpe",
+    "os.execv",
+    "os.execve",
+    "os.execvp",
+    "os.execvpe",
+    "os.spawnl",
+    "os.spawnle",
+    "os.spawnlp",
+    "os.spawnlpe",
+    "os.spawnv",
+    "os.spawnve",
+    "os.spawnvp",
+    "os.spawnvpe",
+    "os.startfile",
+]
+shell = [
+    "os.system",
+    "os.popen",
+    "os.popen2",
+    "os.popen3",
+    "os.popen4",
+    "popen2.popen2",
+    "popen2.popen3",
+    "popen2.popen4",
+    "popen2.Popen3",
+    "popen2.Popen4",
+    "commands.getoutput",
+    "commands.getstatusoutput",
+    "subprocess.getoutput",
+    "subprocess.getstatusoutput",
+]
+subprocess = [
+    "subprocess.Popen",
+    "subprocess.call",
+    "subprocess.check_call",
+    "subprocess.check_output",
+    "subprocess.run",
+]
+
+[tool.bandit.subprocess_without_shell_equals_true]
+no_shell = [
+    "os.execl",
+    "os.execle",
+    "os.execlp",
+    "os.execlpe",
+    "os.execv",
+    "os.execve",
+    "os.execvp",
+    "os.execvpe",
+    "os.spawnl",
+    "os.spawnle",
+    "os.spawnlp",
+    "os.spawnlpe",
+    "os.spawnv",
+    "os.spawnve",
+    "os.spawnvp",
+    "os.spawnvpe",
+    "os.startfile",
+]
+shell = [
+    "os.system",
+    "os.popen",
+    "os.popen2",
+    "os.popen3",
+    "os.popen4",
+    "popen2.popen2",
+    "popen2.popen3",
+    "popen2.popen4",
+    "popen2.Popen3",
+    "popen2.Popen4",
+    "commands.getoutput",
+    "commands.getstatusoutput",
+    "subprocess.getoutput",
+    "subprocess.getstatusoutput",
+]
+subprocess = [
+    "subprocess.Popen",
+    "subprocess.call",
+    "subprocess.check_call",
+    "subprocess.check_output",
+    "subprocess.run",
+]
+
+[tool.bandit.try_except_continue]
+check_typed_exception = false
+
+[tool.bandit.try_except_pass]
+check_typed_exception = false
+
+[tool.bandit.weak_cryptographic_key]
+weak_key_size_dsa_high = 1024
+weak_key_size_dsa_medium = 2048
+weak_key_size_ec_high = 160
+weak_key_size_ec_medium = 224
+weak_key_size_rsa_high = 1024
+weak_key_size_rsa_medium = 2048
