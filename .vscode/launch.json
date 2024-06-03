@@ -5,6 +5,7 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "consoleName": "Python: Django",
       "name": "Python: Django",
       "type": "debugpy",
       "request": "launch",

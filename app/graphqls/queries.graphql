@@ -1,0 +1,78 @@
+query EnumValues($name: String!) {
+  __type(name: $name) {
+    enumValues {
+      name
+    }
+  }
+}
+
+query Colors {
+  colors {
+    ...ColorFields
+    anotherName
+    onlyPkByFruit {
+      pk
+    }
+  }
+}
+
+query Fruits {
+  fruits {
+    ...FruitFields
+  }
+}
+
+query Fruit($pk: ID!) {
+  fruit(pk: $pk) {
+    ...FruitFields
+  }
+  fruitAllFields(pk: $pk) {
+    ...FruitAllFieldsFragment
+  }
+  fruitEnumeratedFields(pk: $pk) {
+    name
+    color {
+      pk
+      __typename
+    }
+    __typename
+  }
+  fruitOverrideFields(pk: $pk) {
+    name
+    color {
+      pk
+      __typename
+    }
+    __typename
+  }
+}
+
+query FruitExcludeFields($pk: ID!) {
+  fruitExcludeFields(pk: $pk) {
+    id
+    category
+    wikiUrls
+    createdAt
+    updatedAt
+    color {
+      pk
+      __typename
+    }
+    __typename
+  }
+}
+
+query FruitOverrideExcludeFields($pk: ID!) {
+  fruitOverrideExcludeFields(pk: $pk) {
+    colorId
+    __typename
+  }
+}
+
+query User2($pk: ID!) {
+  user2(pk: $pk) {
+    id
+    username
+    __typename
+  }
+}

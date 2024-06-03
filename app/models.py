@@ -36,6 +36,9 @@ class Fruit(models.Model):
         choices_enum=FruitCategory,
         help_text="종류",
     )
+    wiki_urls = models.SlugField(blank=True, help_text="Wiki URLs")
+    created_at = models.DateTimeField(auto_now_add=True, help_text="생성 일자")
+    updated_at = models.DateTimeField(auto_now=True, help_text="변경 일자")
     # Relation Fields.
     color = models.ForeignKey(
         "Color",

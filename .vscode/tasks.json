@@ -4,9 +4,17 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Django: export_schema",
+      "label": "Python: Django export_schema",
       "type": "shell",
-      "command": "python manage.py export_schema project.schema > schema.graphql"
+      "command": "python manage.py export_schema_plus --path schema.graphql --watch project.schema",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      }
     }
   ]
 }

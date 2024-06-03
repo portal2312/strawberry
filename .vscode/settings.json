@@ -1,3 +1,11 @@
 {
-  "cSpell.words": ["Initialising", "zfunc"]
+  "cSpell.words": ["Initialising", "zfunc"],
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "database": "${workspaceFolder:strawberry-demo}/db.sqlite3",
+      "name": "127.0.0.1"
+    }
+  ]
 }

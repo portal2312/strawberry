@@ -1,0 +1,21 @@
+# GraphQL Config:
+#   https://the-guild.dev/graphql/config/docs
+#
+# Graphql Code Generator configuration file (default filename: codegen.yml):
+#   https://the-guild.dev/graphql/codegen/docs/getting-started
+#
+# NOTE: GraphQL-Codegen is also integrable with GraphQL-Config, so you can specify .graphqlrc as your configuration file:
+#   https://the-guild.dev/graphql/codegen/docs/config-reference/codegen-config#other-ways-to-provide-configuration
+
+# Refer to schema:
+#   https://the-guild.dev/graphql/config/docs/user/schema
+#   https://www.graphql-code-generator.com/docs/getting-started/schema-field
+schema:
+  - ./schema.graphql
+  - http://127.0.0.1:8000/graphql
+
+# Refer to documents:
+#   https://the-guild.dev/graphql/config/docs/user/documents
+#   https://the-guild.dev/graphql/codegen/docs/config-reference/documents-field
+documents:
+  - ./**/graphqls/*.graphql

@@ -1,0 +1,36 @@
+fragment ColorFields on Color {
+  id
+  name
+  fruits {
+    id
+    __typename
+  }
+  __typename
+}
+
+fragment FruitFields on Fruit {
+  id
+  name
+  category
+  wikiUrls
+  createdAt
+  updatedAt
+  color {
+    ...ColorFields
+  }
+  __typename
+}
+
+fragment FruitAllFieldsFragment on FruitAllFields {
+  id
+  name
+  category
+  wikiUrls
+  createdAt
+  updatedAt
+  color {
+    pk
+    __typename
+  }
+  __typename
+}

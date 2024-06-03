@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "strawberry_django",
     # Local apps.
     "app",
+    "utils",
 ]
 
 MIDDLEWARE = [

@@ -1,4 +1,9 @@
-"""App app schema."""
+"""App app schema.
+
+References:
+    https://strawberry.rocks/docs/types/schema-configurations
+    https://strawberry.rocks/docs/types/scalars#overriding-built-in-scalars
+"""
 
 import strawberry
 
@@ -11,4 +16,5 @@ schema = strawberry.Schema(
     mutation=Mutation,
     subscription=Subscription,
     config=strawberry.schema.config.StrawberryConfig(auto_camel_case=True),
+    scalar_overrides={},
 )
