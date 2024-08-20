@@ -11,7 +11,6 @@ Table of Contents:
   - [Basic Usage](#basic-usage)
     - [Project setup](#project-setup)
       - [Setting a Python Version](#setting-a-python-version)
-      - [Initialising a pre-existing project](#initialising-a-pre-existing-project)
       - [Operating modes](#operating-modes)
       - [Specifying dependencies](#specifying-dependencies)
     - [Using your virtual environment](#using-your-virtual-environment)
@@ -30,6 +29,7 @@ Table of Contents:
     - [Synchronizing dependencies](#synchronizing-dependencies)
     - [Layering optional groups](#layering-optional-groups)
   - [The pyproject.toml file](#the-pyprojecttoml-file)
+  - [Extras](#extras)
 
 ## Introduction
 
@@ -63,16 +63,16 @@ Refer to [Basic Usage](https://python-poetry.org/docs/basic-usage/).
 
 #### Setting a Python Version
 
-```toml
+````toml
 [tool.poetry.dependencies]
 python = "^3.7.0"
-```
+``~/.zfunc/_poetry`
 
 #### Initialising a pre-existing project
 
 ```bash
 poetry init
-```
+````
 
 Then, see `pyproject.toml`.
 
@@ -229,3 +229,15 @@ poetry install --with dev,docs,test --sync
 ## The pyproject.toml file
 
 Refer to [The pyproject.toml file](https://python-poetry.org/docs/pyproject/).
+
+## Extras
+
+https://python-poetry.org/docs/pyproject/#extras
+
+For examples:
+
+```bash
+poetry add bandit --group dev --extras toml
+```
+
+G
