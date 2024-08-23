@@ -31,6 +31,8 @@ ruff = "^0.4.5"
 jupyterlab = "^4.2.0"
 pyyaml = "^6.0.1"
 bandit = { extras = ["toml"], version = "^1.7.8" }
+pytest = "^8.3.2"
+pytest-django = "^4.8.0"
 
 [tool.poetry.group.test]
 optional = true
@@ -509,3 +511,7 @@ weak_key_size_ec_high = 160
 weak_key_size_ec_medium = 224
 weak_key_size_rsa_high = 1024
 weak_key_size_rsa_medium = 2048
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "project.settings"
+python_files = ["test_*.py", "*_test.py", "testing/python/*.py"]
