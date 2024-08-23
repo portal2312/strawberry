@@ -9,7 +9,7 @@
       "name": "Python: Django",
       "type": "debugpy",
       "request": "launch",
-      "args": ["runserver"],
+      "args": ["runserver", "0.0.0.0:8001"],
       "django": true,
       "autoStartBrowser": false,
       "justMyCode": false,
@@ -39,5 +39,22 @@
     //   "autoStartBrowser": false,
     //   "justMyCode": false
     ///}
+    // {
+    //   "name": "Python: Django (Uvicorn)",
+    //   "type": "debugpy",
+    //   "request": "launch",
+    //   "module": "uvicorn",
+    //   "args": [
+    //     "--host",
+    //     "127.0.0.1",
+    //     "--port",
+    //     "8000",
+    //     "--reload",
+    //     "project.asgi:application"
+    //   ],
+    //   "django": true,
+    //   "autoStartBrowser": false,
+    //   "justMyCode": false
+    // }
   ]
 }

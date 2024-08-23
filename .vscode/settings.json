@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["Initialising", "zfunc"],
+  "cSpell.words": ["debugpy", "Initialising", "objtype", "zfunc"],
   "sqltools.connections": [
     {
       "previewLimit": 50,
