@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     # Local apps.
     "utils",
     "app",
+    "my_pydantic",
 ]
 
 MIDDLEWARE = [

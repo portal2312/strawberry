@@ -11,15 +11,17 @@ from strawberry_django.optimizer import DjangoOptimizerExtension
 from app.mutations import Mutation as AppMutation
 from app.queries import Query as AppQuery
 from app.subscriptions import Subscription as AppSubscription
+from my_pydantic.schema import Mutation as MyPydanticMutation
+from my_pydantic.schema import Query as MyPydanticQuery
 
 
 @strawberry.type
-class Query(AppQuery):
+class Query(AppQuery, MyPydanticQuery):
     """Root query class."""
 
 
 @strawberry.type
-class Mutation(AppMutation):
+class Mutation(AppMutation, MyPydanticMutation):
     """Root mutation class."""
 
 

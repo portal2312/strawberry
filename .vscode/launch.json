@@ -13,7 +13,10 @@
       "django": true,
       "autoStartBrowser": false,
       "justMyCode": false,
-      "program": "${workspaceFolder}/manage.py"
+      "program": "${workspaceFolder}/manage.py",
+      "autoReload": {
+        "enable": true
+      }
     }
     // {
     //   "name": "Python: strawberry",
