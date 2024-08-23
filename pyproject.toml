@@ -21,6 +21,7 @@ strawberry-graphql-django = "^0.40.0"
 gunicorn = "^22.0.0"
 uvicorn = "^0.29.0"
 django-choices-field = "^2.3.0"
+pydantic = "^2.8.2"
 
 [tool.poetry.group.dev.dependencies]
 debugpy = "^1.8.1"
@@ -29,7 +30,7 @@ django-stubs = "^5.0.0"
 ruff = "^0.4.5"
 jupyterlab = "^4.2.0"
 pyyaml = "^6.0.1"
-bandit = {extras = ["toml"], version = "^1.7.8"}
+bandit = { extras = ["toml"], version = "^1.7.8" }
 
 [tool.poetry.group.test]
 optional = true
