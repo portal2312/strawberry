@@ -3,7 +3,7 @@
 from django.test import TestCase
 from pydantic import ValidationError
 
-from .models import Parameter
+from .models import Parameter, SharedNetwork
 
 
 class ParameterTestCase(TestCase):
@@ -131,3 +131,107 @@ class ParameterTestCase(TestCase):
                         raise e
         else:
             self.assertIsInstance(parameter, Parameter)
+
+
+class SharedNetworkTestCase(TestCase):
+    """SharedNetwork TestCase."""
+
+    def setUp(self):
+        """Set up."""
+        self.name = "My_SharedNetwork_01"
+        self.names = (self.name,)
+        self.invalid_names = ("", 1, True, None, "My SharedNetwork 01")
+        self.description = "description"
+        self.descriptions = (self.description, "", None)
+        self.invalid_descriptions = (1, True, "a" * 80)
+        self.parameter = Parameter(preferred_lifetime=1, valid_lifetime=1)
+
+    def test_name(self):
+        """Test name field set value."""
+        for name in self.names:
+            shared_network = SharedNetwork(
+                name=name,
+                description=self.description,
+                parameter=self.parameter,
+            )
+            self.assertIsInstance(shared_network, SharedNetwork)
+            self.assertIsInstance(shared_network.parameter, Parameter)
+
+    def test_invalid_name(self):
+        """Test name field set invalid value."""
+        for name in self.invalid_names:
+            try:
+                SharedNetwork(
+                    name=name,
+                    description=self.description,
+                    parameter=self.parameter,
+                )
+            except ValidationError as e:
+                for error in e.errors():
+                    match error["type"], error["loc"]:
+                        case "string_type", ("name",):
+                            self.assertNotIsInstance(
+                                error["input"],
+                                str,
+                            )
+                        case "string_too_short", ("name",):
+                            self.assertLess(
+                                len(error["input"]),
+                                error["ctx"]["min_length"],
+                            )
+                        case "string_pattern_mismatch", ("name",):
+                            self.assertNotRegex(
+                                error["input"],
+                                error["ctx"]["pattern"],
+                            )
+                        case _:
+                            raise e
+
+    def test_description(self):
+        """Test description field set value."""
+        for description in self.descriptions:
+            shared_network = SharedNetwork(
+                name=self.name,
+                description=description,
+                parameter=self.parameter,
+            )
+            self.assertIsInstance(shared_network, SharedNetwork)
+            self.assertIsInstance(shared_network.parameter, Parameter)
+
+    def test_invalid_description(self):
+        """Test description field set invalid value."""
+        for description in self.invalid_descriptions:
+            try:
+                SharedNetwork(
+                    name=self.name,
+                    description=description,
+                    parameter=self.parameter,
+                )
+            except ValidationError as e:
+                for error in e.errors():
+                    match error["type"], error["loc"]:
+                        case "string_type", ("description",):
+                            self.assertNotIsInstance(
+                                error["input"],
+                                str,
+                            )
+                        case "string_too_long", ("description",):
+                            self.assertGreater(
+                                len(error["input"]),
+                                error["ctx"]["max_length"],
+                            )
+                        case _:
+                            raise e
+
+    def test_parameter(self):
+        """Test parameter field set value."""
+        shared_network = SharedNetwork(
+            name=self.name,
+            description=self.description,
+            parameter=Parameter(
+                preferred_lifetime=1,
+                valid_lifetime=1,
+            ),
+        )
+        self.assertIsInstance(shared_network, SharedNetwork)
+        self.assertIsInstance(shared_network.parameter, Parameter)

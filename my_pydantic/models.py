@@ -38,3 +38,11 @@ class Parameter(BaseModel):
                 },
             )
         return self
+
+
+class SharedNetwork(BaseModel):
+    """SharedNetwork."""
+
+    name: str = Field(min_length=1, pattern=r"^\w*$")
+    description: str | None = Field(default=None, max_length=79)
+    parameter: Parameter

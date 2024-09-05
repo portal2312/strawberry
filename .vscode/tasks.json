@@ -7,6 +7,7 @@
       "label": "Python: Django export_schema",
       "type": "shell",
       "command": "python manage.py export_schema_plus --path schema.graphql --watch project.schema",
+      "problemMatcher": [],
       "presentation": {
         "echo": true,
         "reveal": "always",
