@@ -111,9 +111,11 @@ PACKAGE = "^0.1"
 
 ```bash
 poetry config virtualenvs.in-project true
-poetry config list
+poetry config --list
 poetry install
 ```
+
+- [`virtualenvs.in-project`](https://python-poetry.org/docs/configuration/#virtualenvsin-project)
 
 #### Using poetry run
 
@@ -239,5 +241,3 @@ For examples:
 ```bash
 poetry add bandit --group dev --extras toml
 ```
-
-G
