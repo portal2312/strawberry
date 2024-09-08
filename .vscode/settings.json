@@ -1,5 +1,12 @@
 {
-  "cSpell.words": ["debugpy", "Initialising", "objtype", "zfunc"],
+  "cSpell.words": [
+    "conlist",
+    "debugpy",
+    "Initialising",
+    "nbconvert",
+    "objtype",
+    "zfunc"
+  ],
   "sqltools.connections": [
     {
       "database": "${workspaceFolder:strawberry-demo}/db.sqlite3",
