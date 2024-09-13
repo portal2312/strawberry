@@ -1,25 +1,32 @@
 """Models in the my_pydantif app."""
 
-from pydantic import BaseModel, Field, model_validator
+from typing import Self
+
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 from pydantic_core import PydanticCustomError
+
+
+class AbstractModel(BaseModel): ...
 
 
 class Parameter(BaseModel):
     """Parameter."""
 
-    preferred_lifetime: int | None = Field(
-        default=None,
+    model_config = ConfigDict(
+        validate_assignment=True,
+    )
+
+    preferred_lifetime: int = Field(
         gt=0,
         description="Preferred Lifetime",
     )
-    valid_lifetime: int | None = Field(
-        default=None,
+    valid_lifetime: int = Field(
         gt=0,
         description="Valid Lifetime",
     )
 
     @model_validator(mode="after")
-    def check_preferred_lifetime__lte__valid_lifetime(self):
+    def check_preferred_lifetime__lte__valid_lifetime(self) -> Self:
         """Check preferred_lifetime less than or equal valid_lifetime."""
         if self.preferred_lifetime is None:
             return self

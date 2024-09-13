@@ -12,11 +12,11 @@ class ParameterTestCase(TestCase):
     def setUp(self):
         """Set up."""
         self.preferred_lifetime = 1
-        self.preferred_lifetimes = (self.preferred_lifetime, None)
+        self.preferred_lifetimes = (self.preferred_lifetime,)
         self.invalid_preferred_lifetime = "a"
         self.invalid_preferred_lifetime__gt = 0
         self.valid_lifetime = 1
-        self.valid_lifetimes = (self.valid_lifetime, None)
+        self.valid_lifetimes = (self.valid_lifetime,)
         self.invalid_valid_lifetime = "a"
         self.invalid_valid_lifetime__gt = 0
         self.invalid_check_preferred_lifetime__lte__valid_lifetime = (
