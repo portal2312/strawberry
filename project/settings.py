@@ -68,7 +68,9 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # Support django-debug-toolbar at strawberry-graphql-django.
     # https://strawberry-graphql.github.io/strawberry-django/integrations/debug-toolbar/
-    "strawberry_django.middlewares.debug_toolbar.DebugToolbarMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # FIXME: runserver error.
+    # "strawberry_django.middlewares.debug_toolbar.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "project.urls"

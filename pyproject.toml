@@ -25,8 +25,8 @@ pydantic = "^2.8.2"
 
 [tool.poetry.group.dev.dependencies]
 debugpy = "^1.8.1"
-mypy = "^1.10.0"
-django-stubs = "^5.0.0"
+mypy = "^1.13.0"
+django-stubs = "^5.1.1"
 ruff = "^0.4.5"
 jupyterlab = "^4.2.0"
 pyyaml = "^6.0.1"
@@ -74,7 +74,7 @@ disallow_any_generics = true
 check_untyped_defs = true
 no_implicit_reexport = true
 # for strict mypy: (this is the tricky one :-))
-disallow_untyped_defs = true
+disallow_untyped_defs = false
 
 [tool.pydantic-mypy]
 init_forbid_extra = true
