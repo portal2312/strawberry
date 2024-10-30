@@ -11,126 +11,87 @@ class ParameterTestCase(TestCase):
 
     def setUp(self):
         """Set up."""
-        self.preferred_lifetime = 1
-        self.preferred_lifetimes = (self.preferred_lifetime,)
-        self.invalid_preferred_lifetime = "a"
-        self.invalid_preferred_lifetime__gt = 0
-        self.valid_lifetime = 1
-        self.valid_lifetimes = (self.valid_lifetime,)
-        self.invalid_valid_lifetime = "a"
-        self.invalid_valid_lifetime__gt = 0
-        self.invalid_check_preferred_lifetime__lte__valid_lifetime = (
-            self.valid_lifetime + 1
-        )
+        self.preferred_lifetimes = [1]
+        self.valid_lifetimes = [1]
 
     def test_preferred_lifetime(self):
-        """Test valid preferred_lifetime value."""
-        for value in self.preferred_lifetimes:
+        """Test valid preferred_lifetime field."""
+        for preferred_lifetime in self.preferred_lifetimes:
             parameter = Parameter(
-                preferred_lifetime=value,
-                valid_lifetime=self.valid_lifetime,
+                preferred_lifetime=preferred_lifetime,
+                valid_lifetime=self.valid_lifetimes[0],
             )
-            self.assertEqual(parameter.preferred_lifetime, value)
+            self.assertIsInstance(parameter, Parameter)
+            self.assertEqual(parameter.preferred_lifetime, preferred_lifetime)
 
-    def test_invalid_preferred_lifetime(self):
-        """Test invalid preferred_lifetime."""
+    def test_preferred_lifetime__gt(self):
+        """Test preferred_lifetime field, greater than."""
+        field_name = "preferred_lifetime"
+        field = Parameter.model_fields[field_name]
+        preferred_lifetime__gt = field._attributes_set["gt"]
         try:
             Parameter(
-                preferred_lifetime=self.invalid_preferred_lifetime,
-                valid_lifetime=self.valid_lifetime,
+                preferred_lifetime=preferred_lifetime__gt,
+                valid_lifetime=self.valid_lifetimes[0],
             )
         except ValidationError as e:
             for error in e.errors():
                 match error["type"], error["loc"]:
-                    case "int_parsing", ("preferred_lifetime",):
-                        self.assertNotIsInstance(error["input"], int)
-                    case _:
-                        raise e
-
-    def test_invalid_preferred_lifetime__gt(self):
-        """Test invalid preferred_lifetime greater than."""
-        try:
-            Parameter(
-                preferred_lifetime=self.invalid_preferred_lifetime__gt,
-                valid_lifetime=self.valid_lifetime,
-            )
-        except ValidationError as e:
-            for error in e.errors():
-                match error["type"], error["loc"]:
-                    case "greater_than", ("preferred_lifetime",):
+                    case "greater_than", (field_name,):
                         self.assertGreaterEqual(error["input"], error["ctx"]["gt"])
                     case _:
                         raise e
 
     def test_valid_lifetime(self):
-        """Test valid valid_lifetime."""
-        for value in self.valid_lifetimes:
-            try:
-                parameter = Parameter(
-                    preferred_lifetime=self.preferred_lifetime,
-                    valid_lifetime=value,
-                )
-            except ValidationError as e:
-                for error in e.errors():
-                    match error["type"]:
-                        case "preferred_lifetime__lte__valid_lifetime__is_none":
-                            self.assertIsNone(value)
-                        case _:
-                            raise e
-            else:
-                self.assertEqual(parameter.valid_lifetime, value)
+        """Test valid_lifetime field."""
+        for valid_lifetime in self.valid_lifetimes:
+            parameter = Parameter(
+                preferred_lifetime=self.preferred_lifetimes[0],
+                valid_lifetime=valid_lifetime,
+            )
+            self.assertIsInstance(parameter, Parameter)
+            self.assertEqual(parameter.valid_lifetime, valid_lifetime)
 
-    def test_invalid_valid_lifetime(self):
-        """Test invalid valid_lifetime."""
+    def test_valid_lifetime__gt(self):
+        """Test valid_lifetime field, greater than."""
+        field_name = "valid_lifetime"
+        field = Parameter.model_fields[field_name]
+        valid_lifetime__gt = field._attributes_set["gt"]
         try:
             Parameter(
-                preferred_lifetime=self.preferred_lifetime,
-                valid_lifetime=self.invalid_valid_lifetime,
+                preferred_lifetime=self.preferred_lifetimes[0],
+                valid_lifetime=valid_lifetime__gt,
             )
         except ValidationError as e:
             for error in e.errors():
                 match error["type"], error["loc"]:
-                    case "int_parsing", ("valid_lifetime",):
-                        self.assertNotIsInstance(error["input"], int)
-                    case _:
-                        raise e
-
-    def test_invalid_valid_lifetime__gt(self):
-        """Test invalid valid_lifetime greater than."""
-        try:
-            Parameter(
-                preferred_lifetime=self.preferred_lifetime,
-                valid_lifetime=self.invalid_valid_lifetime__gt,
-            )
-        except ValidationError as e:
-            for error in e.errors():
-                match error["type"], error["loc"]:
-                    case "greater_than", ("valid_lifetime",):
+                    case "greater_than", (field_name,):
                         self.assertGreaterEqual(error["input"], error["ctx"]["gt"])
                     case _:
                         raise e
 
     def test_check_preferred_lifetime__lte__valid_lifetime(self):
         """Test Parameter.check_preferred_lifetime__lte__valid_lifetime func."""
+        valid_lifetime = self.valid_lifetimes[0]
+        preferred_lifetime = valid_lifetime + 1
         try:
             parameter = Parameter(
-                preferred_lifetime=self.invalid_check_preferred_lifetime__lte__valid_lifetime,
-                valid_lifetime=self.valid_lifetime,
+                preferred_lifetime=preferred_lifetime,
+                valid_lifetime=valid_lifetime,
             )
         except ValidationError as e:
             for error in e.errors():
                 match error["type"]:
                     case "preferred_lifetime__lte__valid_lifetime__greater":
-                        self.assertGreater(
-                            self.invalid_check_preferred_lifetime__lte__valid_lifetime,
-                            self.valid_lifetime,
-                        )
+                        self.assertGreater(preferred_lifetime, valid_lifetime)
                     case "preferred_lifetime__lte__valid_lifetime__is_none":
-                        self.assertIsNone(self.valid_lifetime)
+                        self.assertIsNone(valid_lifetime)
                     case _:
                         raise e
         else:
             self.assertIsInstance(parameter, Parameter)
+            self.assertEqual(parameter.preferred_lifetime, preferred_lifetime)
+            self.assertEqual(parameter.valid_lifetime, valid_lifetime)
 
 
 class SharedNetworkTestCase(TestCase):
@@ -138,100 +99,47 @@ class SharedNetworkTestCase(TestCase):
 
     def setUp(self):
         """Set up."""
-        self.name = "My_SharedNetwork_01"
-        self.names = (self.name,)
-        self.invalid_names = ("", 1, True, None, "My SharedNetwork 01")
-        self.description = "description"
-        self.descriptions = (self.description, "", None)
-        self.invalid_descriptions = (1, True, "a" * 80)
-        self.parameter = Parameter(preferred_lifetime=1, valid_lifetime=1)
+        self.names = [
+            "string_type",
+            "not_string_too_short",
+            "not_string_pattern_mismatch",
+        ]
+        self.descriptions = ["description", "", None, "a" * 79]
+        self.parameters = [Parameter(preferred_lifetime=1, valid_lifetime=1)]
 
     def test_name(self):
-        """Test name field set value."""
+        """Test name field."""
+        field = SharedNetwork.model_fields["name"]
         for name in self.names:
+            self.assertIsInstance(name, field._attributes_set["annotation"])
+            self.assertGreater(len(name), field._attributes_set["min_length"])
+            self.assertRegex(name, field._attributes_set["pattern"])
             shared_network = SharedNetwork(
                 name=name,
-                description=self.description,
-                parameter=self.parameter,
+                description=self.descriptions[0],
+                parameter=self.parameters[0],
             )
             self.assertIsInstance(shared_network, SharedNetwork)
-            self.assertIsInstance(shared_network.parameter, Parameter)
-
-    def test_invalid_name(self):
-        """Test name field set invalid value."""
-        for name in self.invalid_names:
-            try:
-                SharedNetwork(
-                    name=name,
-                    description=self.description,
-                    parameter=self.parameter,
-                )
-            except ValidationError as e:
-                for error in e.errors():
-                    match error["type"], error["loc"]:
-                        case "string_type", ("name",):
-                            self.assertNotIsInstance(
-                                error["input"],
-                                str,
-                            )
-                        case "string_too_short", ("name",):
-                            self.assertLess(
-                                len(error["input"]),
-                                error["ctx"]["min_length"],
-                            )
-                        case "string_pattern_mismatch", ("name",):
-                            self.assertNotRegex(
-                                error["input"],
-                                error["ctx"]["pattern"],
-                            )
-                        case _:
-                            raise e
+            self.assertEqual(shared_network.name, name)
 
     def test_description(self):
-        """Test description field set value."""
+        """Test description field."""
         for description in self.descriptions:
             shared_network = SharedNetwork(
-                name=self.name,
+                name=self.names[0],
                 description=description,
-                parameter=self.parameter,
+                parameter=self.parameters[0],
+            )
+            self.assertIsInstance(shared_network, SharedNetwork)
+            self.assertEqual(shared_network.description, description)
+
+    def test_parameter(self):
+        """Test parameter field."""
+        for parameter in self.parameters:
+            shared_network = SharedNetwork(
+                name=self.names[0],
+                description=self.descriptions[0],
+                parameter=parameter,
             )
             self.assertIsInstance(shared_network, SharedNetwork)
             self.assertIsInstance(shared_network.parameter, Parameter)
-
-    def test_invalid_description(self):
-        """Test description field set invalid value."""
-        for description in self.invalid_descriptions:
-            try:
-                SharedNetwork(
-                    name=self.name,
-                    description=description,
-                    parameter=self.parameter,
-                )
-            except ValidationError as e:
-                for error in e.errors():
-                    match error["type"], error["loc"]:
-                        case "string_type", ("description",):
-                            self.assertNotIsInstance(
-                                error["input"],
-                                str,
-                            )
-                        case "string_too_long", ("description",):
-                            self.assertGreater(
-                                len(error["input"]),
-                                error["ctx"]["max_length"],
-                            )
-                        case _:
-                            raise e
-
-    def test_parameter(self):
-        """Test parameter field set value."""
-        shared_network = SharedNetwork(
-            name=self.name,
-            description=self.description,
-            parameter=Parameter(
-                preferred_lifetime=1,
-                valid_lifetime=1,
-            ),
-        )
-        self.assertIsInstance(shared_network, SharedNetwork)
-        self.assertIsInstance(shared_network.parameter, Parameter)

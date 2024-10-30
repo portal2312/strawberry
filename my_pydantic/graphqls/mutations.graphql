@@ -1,0 +1,20 @@
+mutation IsMyPydantic {
+  isMyPydantic
+}
+
+mutation SaveSharedNetwork {
+  saveSharedNetwork(
+    input: {
+      name: "A"
+      description: "D"
+      parameter: { preferredLifetime: 3, validLifetime: 2 }
+    }
+  ) {
+    name
+    description
+    parameter {
+      preferredLifetime
+      validLifetime
+    }
+  }
+}

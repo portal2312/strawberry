@@ -1,0 +1,10 @@
+query SharedNetwork {
+  sharedNetwork {
+    name
+    description
+    parameter {
+      preferredLifetime
+      validLifetime
+    }
+  }
+}

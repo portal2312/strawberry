@@ -1,8 +1,20 @@
-"""Models in the my_pydantif app."""
+"""Models in the my_pydantif app.
+
+References:
+    https://docs.pydantic.dev/latest/api/base_model/
+    https://docs.pydantic.dev/latest/concepts/fields/
+    https://docs.pydantic.dev/latest/concepts/validators/
+    https://docs.pydantic.dev/latest/errors/errors/
+"""
 
 from typing import Self
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    model_validator,
+)
 from pydantic_core import PydanticCustomError
 
 
