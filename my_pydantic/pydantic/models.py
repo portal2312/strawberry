@@ -6,8 +6,11 @@ References:
     https://docs.pydantic.dev/latest/concepts/serialization/
     https://docs.pydantic.dev/latest/concepts/validators/
     https://docs.pydantic.dev/latest/errors/errors/
+    https://docs.pydantic.dev/latest/concepts/config/
+    https://docs.pydantic.dev/latest/api/config/#pydantic.config.ConfigDict.validate_assignment
 """
 
+import abc
 from typing import Any, Self
 
 from pydantic import (
@@ -23,15 +26,14 @@ from pydantic_core import PydanticCustomError
 from .types import IPAddress
 
 
-class AbstractModel(BaseModel): ...
-
-
-class Option(BaseModel):
-    """Options."""
-
+class AbstractBaseModel(BaseModel, abc.ABC):
     model_config = ConfigDict(
         validate_assignment=True,
     )
+
+
+class Option(AbstractBaseModel):
+    """Options."""
 
     dns_servers: list[IPAddress] | None = Field(default=None)
     domain_list: list[str] | None = Field(default=None)
@@ -60,12 +62,8 @@ class Option(BaseModel):
         return ", ".join(domain for domain in domain_list)
 
 
-class Parameter(BaseModel):
+class Parameter(AbstractBaseModel):
     """Parameter."""
-
-    model_config = ConfigDict(
-        validate_assignment=True,
-    )
 
     preferred_lifetime: int = Field(
         gt=0,
@@ -98,7 +96,7 @@ class Parameter(BaseModel):
         return self
 
 
-class SharedNetwork(BaseModel):
+class SharedNetwork(AbstractBaseModel):
     """SharedNetwork."""
 
     name: str = Field(min_length=1, pattern=r"^\w*$")
