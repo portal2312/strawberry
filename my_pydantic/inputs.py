@@ -22,6 +22,10 @@ class OptionInput: ...
 class ParameterInput: ...
 
 
+@strawberry.experimental.pydantic.input(model=models.Subnet6, all_fields=True)
+class Subnet6Input: ...
+
+
 @strawberry.experimental.pydantic.input(model=models.SharedNetwork, all_fields=True)
 class SharedNetworkInput:
     def to_pydantic(self) -> models.SharedNetwork:

@@ -1,12 +1,12 @@
 """Tests in the my_pydantic app."""
 
-from ipaddress import IPv4Address, IPv6Address
+from ipaddress import IPv4Address, IPv6Address, IPv6Network
 
 from django.test import TestCase
 from pydantic import ValidationError
 from pydantic.fields import FieldInfo
 
-from .pydantic.models import Option, Parameter, SharedNetwork
+from .pydantic.models import Option, Parameter, SharedNetwork, Subnet6
 
 
 def has_attr_default(field: FieldInfo) -> bool:
@@ -159,6 +159,25 @@ class ParameterTestCase(TestCase):
             self.assertIsInstance(parameter, Parameter)
             self.assertEqual(parameter.preferred_lifetime, preferred_lifetime)
             self.assertEqual(parameter.valid_lifetime, valid_lifetime)
+
+
+class Subnet6TestCase(TestCase):
+    """Subnet6 TestCase."""
+
+    def setUp(self):
+        """Set up."""
+        subnet6_number_str = "2001:4860:4860::/64"
+        self.subnet6_numbers = [
+            subnet6_number_str,
+            IPv6Network(subnet6_number_str),
+        ]
+
+    def test_subnet6_number(self):
+        """Test subnet6_number field."""
+        for subnet6_number in self.subnet6_numbers:
+            subnet6 = Subnet6(subnet6_number=subnet6_number)
+            self.assertIsInstance(subnet6, Subnet6)
+            self.assertIsInstance(subnet6.subnet6_number, IPv6Network)
 
 
 class SharedNetworkTestCase(TestCase):

@@ -1,6 +1,7 @@
 """Models in the my_pydantif app.
 
 References:
+    https://linux.die.net/man/5/dhcpd.conf
     https://docs.pydantic.dev/latest/api/base_model/
     https://docs.pydantic.dev/latest/concepts/fields/
     https://docs.pydantic.dev/latest/concepts/serialization/
@@ -11,6 +12,7 @@ References:
 """
 
 import abc
+from ipaddress import IPv6Network
 from typing import Any, Self
 
 from pydantic import (
@@ -37,6 +39,11 @@ class Option(AbstractBaseModel):
 
     dns_servers: list[IPAddress] | None = Field(default=None)
     domain_list: list[str] | None = Field(default=None)
+
+    @field_serializer("dns_servers")
+    def serialize_dns_servers(self, dns_servers: list[IPAddress], info) -> str:
+        """Serialize dns_servers field."""
+        return ", ".join(dns_server.compressed for dns_server in dns_servers)
 
     @field_validator("domain_list", mode="before")
     @classmethod
@@ -96,10 +103,40 @@ class Parameter(AbstractBaseModel):
         return self
 
 
-class SharedNetwork(AbstractBaseModel):
-    """SharedNetwork."""
+class Subnet6(AbstractBaseModel):
+    """Subnet6 IPv6Network.
 
-    name: str = Field(min_length=1, pattern=r"^\w*$")
+    The subnet6 statement is used to provide dhcpd with enough information to
+    tell whether or not an IPv6 address is on that subnet6.
+    It may also be used to provide subnet-specific parameters and to specify
+    what addresses may be dynamically allocated to clients booting on that subnet.
+    """
+
+    subnet6_number: IPv6Network = Field(
+        description="The `subnet6-number` should be an IPv6 network identifier, specified as ip6-address/bits."
+    )
+
+
+class SharedNetwork(AbstractBaseModel):
+    """SharedNetwork.
+
+    The shared-network statement is used to inform the DHCP server
+    that some IP subnets actually share the same physical network.
+    Any subnets in a shared network should be declared within a shared-network statement.
+    Parameters specified in the shared-network statement will be used when booting clients
+    on those subnets unless parameters provided at the subnet or host level override them.
+    If any subnet in a shared network has addresses available for dynamic allocation,
+    those addresses are collected into a common pool for that shared network and assigned to clients as needed.
+    There is no way to distinguish on which subnet of a shared network a client should boot.
+    """
+
+    name: str = Field(
+        min_length=1,
+        pattern=r"^\w*$",
+        description="Name should be the `name` of the shared network."
+        "This `name` is used when printing debugging messages, so it should be descriptive for the shared network."
+        "The `name` may have the syntax of a valid domain name (although it will never be used as such), or it may be any arbitrary name, enclosed in quotes.",
+    )
     description: str | None = Field(default=None, max_length=79)
     option: Option
     parameter: Parameter
