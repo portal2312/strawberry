@@ -7,11 +7,12 @@ mutation SaveSharedNetwork {
     input: {
       name: "MySharedNetwork"
       description: "This is my shared network."
-      parameter: { preferredLifetime: 2, validLifetime: 2 }
       option: {
         dnsServers: ["8.8.8.8", "2001:4860:4860::8888"]
         domainList: ["google.com"]
       }
+      parameter: { preferredLifetime: 2, validLifetime: 2 }
+      subnets: [{ subnet6Number: "2001:4860:4860::/64" }]
     }
   ) {
     name
@@ -23,6 +24,9 @@ mutation SaveSharedNetwork {
     parameter {
       preferredLifetime
       validLifetime
+    }
+    subnets {
+      subnet6Number
     }
   }
 }

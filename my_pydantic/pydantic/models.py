@@ -140,3 +140,4 @@ class SharedNetwork(AbstractBaseModel):
     description: str | None = Field(default=None, max_length=79)
     option: Option
     parameter: Parameter
+    subnets: list[Subnet6] | None = Field(default=None)

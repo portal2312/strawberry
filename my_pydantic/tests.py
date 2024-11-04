@@ -205,6 +205,9 @@ class SharedNetworkTestCase(TestCase):
         self.parameters = [
             Parameter(preferred_lifetime=1, valid_lifetime=1),
         ]
+        self.subnet6_numbers = [
+            Subnet6(subnet6_number=IPv6Network("2001:4860:4860::/64")),
+        ]
 
     def test_name(self):
         """Test name field."""
@@ -257,3 +260,17 @@ class SharedNetworkTestCase(TestCase):
             )
             self.assertIsInstance(shared_network, SharedNetwork)
             self.assertIsInstance(shared_network.parameter, Parameter)
+
+    def test_subnet(self):
+        """Test subnet field."""
+        shared_network = SharedNetwork(
+            name=self.names[0],
+            description=self.descriptions[0],
+            option=self.options[0],
+            parameter=self.parameters[0],
+            subnets=self.subnet6_numbers,
+        )
+        self.assertIsInstance(shared_network, SharedNetwork)
+        self.assertTrue(
+            all(isinstance(subnet, Subnet6) for subnet in shared_network.subnets)
+        )
