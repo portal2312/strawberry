@@ -1,9 +1,76 @@
 """Tests in the my_pydantic app."""
 
+from ipaddress import IPv4Address, IPv6Address
+
 from django.test import TestCase
 from pydantic import ValidationError
+from pydantic.fields import FieldInfo
 
-from .models import Parameter, SharedNetwork
+from .pydantic.models import Option, Parameter, SharedNetwork
+
+
+def has_attr_default(field: FieldInfo) -> bool:
+    """Has attribute default at the field."""
+    return hasattr(field._attributes_set, "default")
+
+
+def is_default_none(field: FieldInfo) -> bool:
+    """Is default value None at the field."""
+    return field._attributes_set["default"] is None
+
+
+class OptionTestCase(TestCase):
+    def setUp(self):
+        """Set up."""
+        ip4_str, ip6_str = "8.8.8.8", "2001:4860:4860::8888"
+        ip4, ip6 = IPv4Address(ip4_str), IPv6Address(ip6_str)
+        self.dns_servers = [
+            [ip4, ip6],
+            [ip4_str, ip6_str],
+            [ip4_str, ip6_str, ip4, ip6],
+            None,
+        ]
+        self.domain_list = [
+            ["https://www.google.com/", "google.com"],
+            "https://www.google.com/, google.com,",
+            "https://www.google.com/",
+            None,
+        ]
+
+    def test_dns_servers(self):
+        """Test dns servers field."""
+        field = Option.model_fields["dns_servers"]
+        is_field_default_none = has_attr_default(field) and is_default_none(field)
+        for dns_servers in self.dns_servers:
+            option = Option(
+                dns_servers=dns_servers,
+                domain_list=self.domain_list[0],
+            )
+            self.assertIsInstance(option, Option)
+            if option.dns_servers:
+                self.assertTrue(
+                    all(
+                        isinstance(v, (IPv4Address, IPv6Address))
+                        for v in option.dns_servers
+                    )
+                )
+            elif is_field_default_none:
+                self.assertIsNone(option.dns_servers)
+
+    def test_domain_list(self):
+        """Test domain_list field."""
+        field = Option.model_fields["domain_list"]
+        is_field_default_none = has_attr_default(field) and is_default_none(field)
+        for domain_list in self.domain_list:
+            option = Option(
+                dns_servers=self.dns_servers[0],
+                domain_list=domain_list,
+            )
+            self.assertIsInstance(option, Option)
+            if option.domain_list:
+                self.assertTrue(all(isinstance(v, str) for v in option.domain_list))
+            elif is_field_default_none:
+                self.assertIsNone(option.domain_list)
 
 
 class ParameterTestCase(TestCase):
@@ -104,8 +171,21 @@ class SharedNetworkTestCase(TestCase):
             "not_string_too_short",
             "not_string_pattern_mismatch",
         ]
-        self.descriptions = ["description", "", None, "a" * 79]
-        self.parameters = [Parameter(preferred_lifetime=1, valid_lifetime=1)]
+        self.descriptions = [
+            "description",
+            "",
+            None,
+            "a" * 79,
+        ]
+        self.options = [
+            Option(
+                dns_servers=["8.8.8.8", "2001:4860:4860::8888"],
+                domain_list=["google.com"],
+            )
+        ]
+        self.parameters = [
+            Parameter(preferred_lifetime=1, valid_lifetime=1),
+        ]
 
     def test_name(self):
         """Test name field."""
@@ -117,6 +197,7 @@ class SharedNetworkTestCase(TestCase):
             shared_network = SharedNetwork(
                 name=name,
                 description=self.descriptions[0],
+                option=self.options[0],
                 parameter=self.parameters[0],
             )
             self.assertIsInstance(shared_network, SharedNetwork)
@@ -128,10 +209,23 @@ class SharedNetworkTestCase(TestCase):
             shared_network = SharedNetwork(
                 name=self.names[0],
                 description=description,
+                option=self.options[0],
                 parameter=self.parameters[0],
             )
             self.assertIsInstance(shared_network, SharedNetwork)
             self.assertEqual(shared_network.description, description)
+
+    def test_option(self):
+        """Test parameter field."""
+        for option in self.options:
+            shared_network = SharedNetwork(
+                name=self.names[0],
+                description=self.descriptions[0],
+                option=option,
+                parameter=self.parameters[0],
+            )
+            self.assertIsInstance(shared_network, SharedNetwork)
+            self.assertIsInstance(shared_network.option, Option)
 
     def test_parameter(self):
         """Test parameter field."""
@@ -139,6 +233,7 @@ class SharedNetworkTestCase(TestCase):
             shared_network = SharedNetwork(
                 name=self.names[0],
                 description=self.descriptions[0],
+                option=self.options[0],
                 parameter=parameter,
             )
             self.assertIsInstance(shared_network, SharedNetwork)

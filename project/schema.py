@@ -4,6 +4,8 @@ References:
     https://strawberry.rocks/docs/types/schema#filteringcustomising-fields
 """
 
+from ipaddress import IPv4Address, IPv6Address
+
 import strawberry
 from strawberry.types.types import StrawberryObjectDefinition
 from strawberry_django.optimizer import DjangoOptimizerExtension
@@ -11,6 +13,8 @@ from strawberry_django.optimizer import DjangoOptimizerExtension
 from app.mutations import Mutation as AppMutation
 from app.queries import Query as AppQuery
 from app.subscriptions import Subscription as AppSubscription
+from my_pydantic.pydantic.types import IPAddress
+from my_pydantic.scalars import IPAddressScalar, IPv4AddressScalar, IPv6AddressScalar
 from my_pydantic.schema import Mutation as MyPydanticMutation
 from my_pydantic.schema import Query as MyPydanticQuery
 
@@ -59,7 +63,7 @@ def public_field_filter(field) -> bool:
 class PublicSchema(strawberry.Schema):
     """Override Schema class."""
 
-    def get_fields(self, type_definition: StrawberryObjectDefinition) -> list:
+    def get_fields(self, type_definition: StrawberryObjectDefinition) -> list:  # type: ignore
         """Override get_fields function."""
         return list(filter(public_field_filter, type_definition.fields))
 
@@ -72,4 +76,9 @@ schema = PublicSchema(
     extensions=[
         DjangoOptimizerExtension,  # not required, but highly recommended
     ],
+    scalar_overrides={
+        IPv4Address: IPv4AddressScalar,
+        IPv6Address: IPv6AddressScalar,
+        IPAddress: IPAddressScalar,
+    },
 )

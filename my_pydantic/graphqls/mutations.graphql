@@ -5,13 +5,21 @@ mutation IsMyPydantic {
 mutation SaveSharedNetwork {
   saveSharedNetwork(
     input: {
-      name: "A"
-      description: "D"
-      parameter: { preferredLifetime: 3, validLifetime: 2 }
+      name: "MySharedNetwork"
+      description: "This is my shared network."
+      parameter: { preferredLifetime: 2, validLifetime: 2 }
+      option: {
+        dnsServers: ["8.8.8.8", "2001:4860:4860::8888"]
+        domainList: ["google.com"]
+      }
     }
   ) {
     name
     description
+    option {
+      dnsServers
+      domainList
+    }
     parameter {
       preferredLifetime
       validLifetime

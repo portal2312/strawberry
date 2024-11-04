@@ -2,8 +2,7 @@
 
 from strawberry.types import Info
 
-from my_pydantic.models import Parameter
-
+from .pydantic.models import Parameter
 from .types import SharedNetwork
 
 

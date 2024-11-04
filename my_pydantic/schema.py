@@ -1,10 +1,18 @@
 """Schema in my_pydantic app."""
 
+from ipaddress import IPv4Address, IPv6Address
+
 import strawberry
 import strawberry_django
 
 from .mutations import save_shared_network
+from .pydantic.types import IPAddress
 from .queries import get_shared_network
+from .scalars import (
+    IPAddressScalar,
+    IPv4AddressScalar,
+    IPv6AddressScalar,
+)
 from .types import SharedNetwork
 
 
@@ -28,4 +36,12 @@ class Mutation:
     )
 
 
-schema = strawberry.Schema(query=Query, mutation=Mutation)
+schema = strawberry.Schema(
+    query=Query,
+    mutation=Mutation,
+    scalar_overrides={
+        IPv4Address: IPv4AddressScalar,
+        IPv6Address: IPv6AddressScalar,
+        IPAddress: IPAddressScalar,
+    },
+)
