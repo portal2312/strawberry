@@ -1,12 +1,13 @@
-"""Tests in the my_pydantic app."""
+"""Tests pydantic in the my_pydantic app."""
 
 from ipaddress import IPv4Address, IPv6Address, IPv6Network
+from typing import Any
 
 from django.test import TestCase
 from pydantic import ValidationError
 from pydantic.fields import FieldInfo
 
-from .pydantic.models import Option, Parameter, SharedNetwork, Subnet6
+from ..pydantic.models import Option, Parameter, SharedNetwork, Subnet6
 
 
 def has_attr_default(field: FieldInfo) -> bool:
@@ -24,13 +25,13 @@ class OptionTestCase(TestCase):
         """Set up."""
         ip4_str, ip6_str = "8.8.8.8", "2001:4860:4860::8888"
         ip4, ip6 = IPv4Address(ip4_str), IPv6Address(ip6_str)
-        self.dns_servers = [
+        self.dns_servers: list[Any] = [
             [ip4, ip6],
             [ip4_str, ip6_str],
             [ip4_str, ip6_str, ip4, ip6],
             None,
         ]
-        self.domain_list = [
+        self.domain_list: list[Any] = [
             ["https://www.google.com/", "google.com"],
             "https://www.google.com/, google.com,",
             "https://www.google.com/",
@@ -93,9 +94,8 @@ class ParameterTestCase(TestCase):
 
     def test_preferred_lifetime__gt(self):
         """Test preferred_lifetime field, greater than."""
-        field_name = "preferred_lifetime"
-        field = Parameter.model_fields[field_name]
-        preferred_lifetime__gt = field._attributes_set["gt"]
+        field = Parameter.model_fields["preferred_lifetime"]
+        preferred_lifetime__gt: int = field._attributes_set["gt"]  # type: ignore[assignment]
         try:
             Parameter(
                 preferred_lifetime=preferred_lifetime__gt,
@@ -104,7 +104,7 @@ class ParameterTestCase(TestCase):
         except ValidationError as e:
             for error in e.errors():
                 match error["type"], error["loc"]:
-                    case "greater_than", (field_name,):
+                    case "greater_than", ("preferred_lifetime",):
                         self.assertGreaterEqual(error["input"], error["ctx"]["gt"])
                     case _:
                         raise e
@@ -121,9 +121,8 @@ class ParameterTestCase(TestCase):
 
     def test_valid_lifetime__gt(self):
         """Test valid_lifetime field, greater than."""
-        field_name = "valid_lifetime"
-        field = Parameter.model_fields[field_name]
-        valid_lifetime__gt = field._attributes_set["gt"]
+        field = Parameter.model_fields["valid_lifetime"]
+        valid_lifetime__gt: int = field._attributes_set["gt"]  # type: ignore[assignment]
         try:
             Parameter(
                 preferred_lifetime=self.preferred_lifetimes[0],
@@ -132,7 +131,7 @@ class ParameterTestCase(TestCase):
         except ValidationError as e:
             for error in e.errors():
                 match error["type"], error["loc"]:
-                    case "greater_than", (field_name,):
+                    case "greater_than", ("valid_lifetime",):
                         self.assertGreaterEqual(error["input"], error["ctx"]["gt"])
                     case _:
                         raise e
@@ -167,7 +166,7 @@ class Subnet6TestCase(TestCase):
     def setUp(self):
         """Set up."""
         subnet6_number_str = "2001:4860:4860::/64"
-        self.subnet6_numbers = [
+        self.subnet6_numbers: list[Any] = [
             subnet6_number_str,
             IPv6Network(subnet6_number_str),
         ]
@@ -185,12 +184,12 @@ class SharedNetworkTestCase(TestCase):
 
     def setUp(self):
         """Set up."""
-        self.names = [
+        self.names: list[Any] = [
             "string_type",
             "not_string_too_short",
             "not_string_pattern_mismatch",
         ]
-        self.descriptions = [
+        self.descriptions: list[Any] = [
             "description",
             "",
             None,
@@ -198,7 +197,10 @@ class SharedNetworkTestCase(TestCase):
         ]
         self.options = [
             Option(
-                dns_servers=["8.8.8.8", "2001:4860:4860::8888"],
+                dns_servers=[
+                    IPv4Address("8.8.8.8"),
+                    IPv6Address("2001:4860:4860::8888"),
+                ],
                 domain_list=["google.com"],
             )
         ]
@@ -213,8 +215,8 @@ class SharedNetworkTestCase(TestCase):
         """Test name field."""
         field = SharedNetwork.model_fields["name"]
         for name in self.names:
-            self.assertIsInstance(name, field._attributes_set["annotation"])
-            self.assertGreater(len(name), field._attributes_set["min_length"])
+            self.assertIsInstance(name, str)
+            self.assertGreater(len(name), field._attributes_set["min_length"])  # type: ignore[misc]
             self.assertRegex(name, field._attributes_set["pattern"])
             shared_network = SharedNetwork(
                 name=name,
@@ -271,6 +273,14 @@ class SharedNetworkTestCase(TestCase):
             subnets=self.subnet6_numbers,
         )
         self.assertIsInstance(shared_network, SharedNetwork)
-        self.assertTrue(
-            all(isinstance(subnet, Subnet6) for subnet in shared_network.subnets)
-        )
+
+        if shared_network.subnets:
+            self.assertTrue(
+                all(isinstance(subnet, Subnet6) for subnet in shared_network.subnets)
+            )
+        elif (
+            (field := SharedNetwork.model_fields["subnets"])
+            and has_attr_default(field)
+            and is_default_none(field)
+        ):
+            self.assertIsNone(shared_network.subnets)

@@ -35,10 +35,24 @@ class AbstractBaseModel(BaseModel, abc.ABC):
 
 
 class Option(AbstractBaseModel):
-    """Options."""
+    """Dynamic Host Configuration Protocol options.
 
-    dns_servers: list[IPAddress] | None = Field(default=None)
-    domain_list: list[str] | None = Field(default=None)
+    References:
+        https://linux.die.net/man/5/dhcp-options
+    """
+
+    dns_servers: list[IPAddress] | None = Field(
+        default=None,
+        description=(
+            'The `name-servers` option instructs clients about locally available recursive DNS servers. It is easiest to describe this as the "nameserver" line in /etc/resolv.conf.'
+        ),
+    )
+    domain_list: list[str] | None = Field(
+        default=None,
+        description=(
+            'The domain-list data type specifies a list of domain names, enclosed in double quotes and separated by commas ("example.com", "foo.example.com").'
+        ),
+    )
 
     @field_serializer("dns_servers")
     def serialize_dns_servers(self, dns_servers: list[IPAddress], info) -> str:
@@ -70,15 +84,23 @@ class Option(AbstractBaseModel):
 
 
 class Parameter(AbstractBaseModel):
-    """Parameter."""
+    """Dynamic Host Configuration Protocol parameters."""
 
     preferred_lifetime: int = Field(
         gt=0,
-        description="Preferred Lifetime",
+        description=(
+            "IPv6 addresses have 'valid' and 'preferred' lifetimes. The valid lifetime determines at what point at lease might be said to have expired, and is no longer useable. A preferred lifetime is an advisory condition to help applications move off of the address and onto currently valid addresses (should there still be any open TCP sockets or similar)."
+            ""
+            "The preferred lifetime defaults to the renew+rebind timers, or 3/4 the default lease time if none were specified."
+        ),
+        # alias="preferred-lifetime",
     )
     valid_lifetime: int = Field(
         gt=0,
-        description="Valid Lifetime",
+        description=(
+            'Time should be the length in seconds that will be assigned to a lease if the client requesting the lease does not ask for a specific expiration time. This is used for both DHCPv4 and DHCPv6 leases (it is also known as the "valid lifetime" in DHCPv6).'
+        ),
+        # alias="default-lease-time",
     )
 
     @model_validator(mode="after")
@@ -104,40 +126,51 @@ class Parameter(AbstractBaseModel):
 
 
 class Subnet6(AbstractBaseModel):
-    """Subnet6 IPv6Network.
+    """Subnet IPv6Network.
 
-    The subnet6 statement is used to provide dhcpd with enough information to
+    The `subnet6` statement is used to provide dhcpd with enough information to
     tell whether or not an IPv6 address is on that subnet6.
     It may also be used to provide subnet-specific parameters and to specify
     what addresses may be dynamically allocated to clients booting on that subnet.
     """
 
     subnet6_number: IPv6Network = Field(
-        description="The `subnet6-number` should be an IPv6 network identifier, specified as ip6-address/bits."
+        description=(
+            "The `subnet6-number` should be an IPv6 network identifier, specified as ip6-address/bits."
+        ),
+        # alias="subnet6-number",
     )
 
 
 class SharedNetwork(AbstractBaseModel):
     """SharedNetwork.
 
-    The shared-network statement is used to inform the DHCP server
-    that some IP subnets actually share the same physical network.
+    The `shared-network` statement is used to inform the DHCP server that some IP subnets actually share the same physical network.
     Any subnets in a shared network should be declared within a shared-network statement.
-    Parameters specified in the shared-network statement will be used when booting clients
-    on those subnets unless parameters provided at the subnet or host level override them.
-    If any subnet in a shared network has addresses available for dynamic allocation,
-    those addresses are collected into a common pool for that shared network and assigned to clients as needed.
+    Parameters specified in the shared-network statement will be used when booting clients on those subnets unless parameters provided at the subnet or host level override them.
+    If any subnet in a shared network has addresses available for dynamic allocation, those addresses are collected into a common pool for that shared network and assigned to clients as needed.
     There is no way to distinguish on which subnet of a shared network a client should boot.
     """
 
     name: str = Field(
         min_length=1,
         pattern=r"^\w*$",
-        description="Name should be the `name` of the shared network."
-        "This `name` is used when printing debugging messages, so it should be descriptive for the shared network."
-        "The `name` may have the syntax of a valid domain name (although it will never be used as such), or it may be any arbitrary name, enclosed in quotes.",
+        description=(
+            "Name should be the name of the shared network. This name is used when printing debugging messages, so it should be descriptive for the shared network. The name may have the syntax of a valid domain name (although it will never be used as such), or it may be any arbitrary name, enclosed in quotes."
+        ),
     )
-    description: str | None = Field(default=None, max_length=79)
-    option: Option
-    parameter: Parameter
-    subnets: list[Subnet6] | None = Field(default=None)
+    description: str | None = Field(
+        default=None,
+        max_length=79,
+        description="Description of the shared network.",
+    )
+    option: Option = Field(
+        description=Option.__doc__,
+    )
+    parameter: Parameter = Field(
+        description=Parameter.__doc__,
+    )
+    subnets: list[Subnet6] | None = Field(
+        default=None,
+        description=Subnet6.__doc__,
+    )

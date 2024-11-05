@@ -538,4 +538,4 @@ weak_key_size_rsa_medium = 2048
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "project.settings"
-python_files = ["test_*.py", "*_test.py", "testing/python/*.py"]
+python_files = ["test_*.py", "*_test.py"]

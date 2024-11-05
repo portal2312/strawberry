@@ -33,7 +33,6 @@ class Query:
 class Mutation:
     """Root mutation in my_pydantic app."""
 
-    is_my_pydantic: bool = strawberry.field(resolver=lambda: True)
     save_shared_network: SharedNetwork = strawberry_django.field(
         resolver=save_shared_network,
     )
