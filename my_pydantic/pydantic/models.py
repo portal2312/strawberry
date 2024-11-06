@@ -12,7 +12,7 @@ References:
 """
 
 import abc
-from ipaddress import IPv6Network
+from ipaddress import IPv6Address, IPv6Network
 from typing import Any, Self
 
 from pydantic import (
@@ -25,7 +25,7 @@ from pydantic import (
 )
 from pydantic_core import PydanticCustomError
 
-from .types import IPAddress
+from .types import DUID, IAID, IPAddress
 
 
 class AbstractBaseModel(BaseModel, abc.ABC):
@@ -123,6 +123,14 @@ class Parameter(AbstractBaseModel):
                 },
             )
         return self
+
+
+class Bind(AbstractBaseModel):
+    """Dynamic Host Configuration Protocol bind for IPv6Address."""
+
+    duid: DUID
+    iaid: IAID
+    ip6_address: IPv6Address
 
 
 class Subnet6(AbstractBaseModel):

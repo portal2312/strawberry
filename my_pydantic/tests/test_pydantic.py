@@ -7,7 +7,7 @@ from django.test import TestCase
 from pydantic import ValidationError
 from pydantic.fields import FieldInfo
 
-from ..pydantic.models import Option, Parameter, SharedNetwork, Subnet6
+from ..pydantic.models import Bind, Option, Parameter, SharedNetwork, Subnet6
 
 
 def has_attr_default(field: FieldInfo) -> bool:
@@ -177,6 +177,55 @@ class Subnet6TestCase(TestCase):
             subnet6 = Subnet6(subnet6_number=subnet6_number)
             self.assertIsInstance(subnet6, Subnet6)
             self.assertIsInstance(subnet6.subnet6_number, IPv6Network)
+
+
+class BindTestCase(TestCase):
+    """Bind TestCase."""
+
+    def setUp(self):
+        """Set up."""
+        self.duid_list = [
+            "000300011A2B3C4D5E6F7A8B",
+            "00:03:00:01:1A:2B:3C:4D:5E:6F:7A:8B",
+        ]
+        self.iaid_list = [
+            "1A:2B:3C:4D",
+            "4294967295",
+        ]
+        self.ip6_address_list: list[Any] = [
+            "2001:4860:4860:0:0:0:0:0001",
+            IPv6Address("2001:4860:4860:0:0:0:0:0001"),
+        ]
+
+    def test_duid(self):
+        """Test duid field."""
+        for duid in self.duid_list:
+            bind = Bind(
+                duid=duid,
+                iaid=self.iaid_list[0],
+                ip6_address=self.ip6_address_list[0],
+            )
+            self.assertIsInstance(bind, Bind)
+
+    def test_iaid(self):
+        """Test iaid field."""
+        for iaid in self.iaid_list:
+            bind = Bind(
+                duid=self.duid_list[0],
+                iaid=iaid,
+                ip6_address=self.ip6_address_list[0],
+            )
+            self.assertIsInstance(bind, Bind)
+
+    def test_ip6_address(self):
+        """Test ip6_address field."""
+        for ip6_address in self.ip6_address_list:
+            bind = Bind(
+                duid=self.duid_list[0],
+                iaid=self.iaid_list[0],
+                ip6_address=ip6_address,
+            )
+            self.assertIsInstance(bind, Bind)
 
 
 class SharedNetworkTestCase(TestCase):

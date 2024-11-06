@@ -3,6 +3,8 @@
     "conlist",
     "debugpy",
     "dhcpd",
+    "DUID",
+    "iaid",
     "Initialising",
     "nbconvert",
     "objtype",
