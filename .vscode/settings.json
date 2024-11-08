@@ -6,8 +6,11 @@
     "DUID",
     "iaid",
     "Initialising",
+    "nameserver",
     "nbconvert",
     "objtype",
+    "resolv",
+    "usefixtures",
     "zfunc"
   ],
   "sqltools.connections": [

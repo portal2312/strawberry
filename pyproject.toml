@@ -33,6 +33,7 @@ pyyaml = "^6.0.1"
 bandit = { extras = ["toml"], version = "^1.7.8" }
 pytest = "^8.3.2"
 pytest-django = "^4.8.0"
+flake8-pytest-style = "^2.0.0"
 
 [tool.poetry.group.test]
 optional = true
@@ -95,8 +96,13 @@ django_settings_module = "project.settings"
 
 # ---
 # Ruff
-# https://docs.astral.sh/ruff/configuration/
-# https://docs.astral.sh/ruff/settings/#lintpydocstyle
+#
+# References:
+# - [Default configuratoin](https://docs.astral.sh/ruff/configuration/)
+# - [Ruff extension for VSCode](https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff)
+#
+# Top-level
+# https://docs.astral.sh/ruff/settings/#top-level
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
 exclude = [
@@ -128,24 +134,35 @@ exclude = [
     "venv",
     "**/migrations",
 ]
-# https://docs.astral.sh/ruff/faq/#does-ruff-support-jupyter-notebooks
-# https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff
-extend-include = ["*.ipynb"]
+extend-include = [
+    # https://docs.astral.sh/ruff/faq/#does-ruff-support-jupyter-notebooks
+    "*.ipynb",
+]
 
-# Same as Black.
-# line-length = 88
-# indent-width = 4
+# https://docs.astral.sh/ruff/settings/#lint
 [tool.ruff.lint]
-# Enable all `pydocstyle` rules, limiting to those that adhere to the
-# Google convention via `convention = "google"`, below.
-#
-# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
-# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
-# McCabe complexity (`C901`) by default.
-select = ["D", "E4", "E7", "E9", "F"]
-# On top of the Google convention, disable `D417`, which requires
-# documentation for every function parameter.
-ignore = ["D101", "D212", "D417"]
+select = [
+    # pydocstyle (D)
+    # https://docs.astral.sh/ruff/rules/#pydocstyle-d
+    "D",
+    # pydocstyle (E, W)
+    # https://docs.astral.sh/ruff/rules/#pycodestyle-e-w
+    "E4",
+    "E7",
+    "E9",
+    # Pyflakes (F)
+    # https://docs.astral.sh/ruff/rules/#pyflakes-f
+    "F",
+    # flake8-pytest-style (PT)
+    # https://docs.astral.sh/ruff/rules/#flake8-pyi-pyi
+    "PT"
+]
+ignore = [
+    # https://docs.astral.sh/ruff/rules/undocumented-public-class/#undocumented-public-class-d101
+    "D101",
+    # https://docs.astral.sh/ruff/rules/multi-line-summary-first-line/#multi-line-summary-first-line-d212
+    "D212",
+]
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]
 unfixable = []
@@ -174,8 +191,18 @@ docstring-code-format = false
 # enabled.
 docstring-code-line-length = "dynamic"
 
+# https://docs.astral.sh/ruff/settings/#lint_per-file-ignores
+[tool.ruff.lint.per-file-ignores]
+# https://docs.astral.sh/ruff/configuration/#jupyter-notebook-discovery
+"*.ipynb" = ["D", "F"]
+
+# https://docs.astral.sh/ruff/settings/#lintpydocstyle
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+# https://docs.astral.sh/ruff/settings/#lintflake8-pytest-style
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = false
 
 # ---
 # Bandit
@@ -536,6 +563,9 @@ weak_key_size_ec_medium = 224
 weak_key_size_rsa_high = 1024
 weak_key_size_rsa_medium = 2048
 
+# ---
+# pytest
+# https://docs.pytest.org/en/stable/reference/customize.html
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "project.settings"
 python_files = ["test_*.py", "*_test.py"]

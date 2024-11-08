@@ -17,8 +17,8 @@ class QueryTestCase(TestCase):
           {fieldname}
         }}"""
         response = schema.execute_sync(query)
-        self.assertIn(fieldname, response.data)
-        self.assertTrue(response.data[fieldname])
+        assert fieldname in response.data
+        assert response.data[fieldname]
 
     def test_shared_network(self):
         """Test shared_network field."""
@@ -40,7 +40,7 @@ class QueryTestCase(TestCase):
           }
         }"""
         response = schema.execute_sync(query)
-        self.assertIn("sharedNetwork", response.data)
+        assert "sharedNetwork" in response.data
 
 
 class MutationTestCase(TestCase):
@@ -65,38 +65,25 @@ class MutationTestCase(TestCase):
             }
           }
         }"""
-        variables = {
-            "input": {
-                "name": "MySharedNetwork",
-                "description": "This is my shared network.",
-                "option": {
-                    "dnsServers": ["8.8.8.8", "2001:4860:4860::8888"],
-                    "domainList": ["google.com"],
-                },
-                "parameter": {"preferredLifetime": 2, "validLifetime": 2},
-                "subnets": [{"subnet6Number": "2001:4860:4860::/64"}],
-            }
+        input = {
+            "name": "MySharedNetwork",
+            "description": "This is my shared network.",
+            "option": {
+                "dnsServers": ["8.8.8.8", "2001:4860:4860::8888"],
+                "domainList": ["google.com"],
+            },
+            "parameter": {"preferredLifetime": 2, "validLifetime": 2},
+            "subnets": [{"subnet6Number": "2001:4860:4860::/64"}],
         }
-        response = schema.execute_sync(query, variable_values=variables)
-        output_fieldname = to_camel_case("save_shared_network")
-        self.assertIn(output_fieldname, response.data)
-        self.assertEqual(
-            response.data[output_fieldname]["name"],
-            variables["input"]["name"],
+        resp = schema.execute_sync(
+            query,
+            variable_values={"input": input},
         )
-        self.assertEqual(
-            response.data[output_fieldname]["description"],
-            variables["input"]["description"],
-        )
-        self.assertEqual(
-            response.data[output_fieldname]["option"],
-            variables["input"]["option"],
-        )
-        self.assertEqual(
-            response.data[output_fieldname]["parameter"],
-            variables["input"]["parameter"],
-        )
-        self.assertEqual(
-            response.data[output_fieldname]["subnets"],
-            variables["input"]["subnets"],
-        )
+        assert resp.errors is None
+        root = to_camel_case("save_shared_network")
+        assert root in resp.data
+        assert resp.data[root]["name"] == input["name"]
+        assert resp.data[root]["description"] == input["description"]
+        assert resp.data[root]["option"] == input["option"]
+        assert resp.data[root]["parameter"] == input["parameter"]
+        assert resp.data[root]["subnets"] == input["subnets"]

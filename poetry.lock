@@ -818,6 +818,31 @@ files = [
 devel = ["colorama", "json-spec", "jsonschema", "pylint", "pytest", "pytest-benchmark", "pytest-cache", "validictory"]
 
 [[package]]
+name = "flake8-plugin-utils"
+version = "1.3.3"
+description = "The package provides base classes and utils for flake8 plugin writing"
+optional = false
+python-versions = ">=3.6,<4.0"
+files = [
+    {file = "flake8-plugin-utils-1.3.3.tar.gz", hash = "sha256:39f6f338d038b301c6fd344b06f2e81e382b68fa03c0560dff0d9b1791a11a2c"},
+    {file = "flake8_plugin_utils-1.3.3-py3-none-any.whl", hash = "sha256:e4848c57d9d50f19100c2d75fa794b72df068666a9041b4b0409be923356a3ed"},
+]
+
+[[package]]
+name = "flake8-pytest-style"
+version = "2.0.0"
+description = "A flake8 plugin checking common style issues or inconsistencies with pytest-based tests."
+optional = false
+python-versions = "<4.0.0,>=3.8.1"
+files = [
+    {file = "flake8_pytest_style-2.0.0-py3-none-any.whl", hash = "sha256:abcb9f56f277954014b749e5a0937fae215be01a21852e9d05e7600c3de6aae5"},
+    {file = "flake8_pytest_style-2.0.0.tar.gz", hash = "sha256:919c328cacd4bc4f873ea61ab4db0d8f2c32e0db09a3c73ab46b1de497556464"},
+]
+
+[package.dependencies]
+flake8-plugin-utils = ">=1.3.2,<2.0.0"
+
+[[package]]
 name = "fqdn"
 version = "1.5.1"
 description = "Validates fully-qualified domain names against RFC 1123, so that they are acceptable to modern bowsers"
@@ -3230,4 +3255,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "383d3cd0be48ae6ba095ec34f1b4856cbbd0b5e33562862a0672d1c9d9db2156"
+content-hash = "c8a9dc8eab24392ba38b243968f24242deb3db5fc5b77e5d83c50b8c9ea4b9b4"

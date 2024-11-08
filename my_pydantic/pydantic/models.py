@@ -29,6 +29,8 @@ from .types import DUID, IAID, IPAddress
 
 
 class AbstractBaseModel(BaseModel, abc.ABC):
+    """Inheritance BaseModel and AbstractModel."""
+
     model_config = ConfigDict(
         validate_assignment=True,
     )
@@ -115,7 +117,7 @@ class Parameter(AbstractBaseModel):
             )
         if self.preferred_lifetime > self.valid_lifetime:
             raise PydanticCustomError(
-                "preferred_lifetime__lte__valid_lifetime__greater",
+                "preferred_lifetime__lte__valid_lifetime__is_greater",
                 "Preferred Lifetime 이 Valid Lifetime 보다 큽니다: {preferred_lifetime} <= {valid_lifetime} 은 올바르지 않습니다.",
                 {
                     "preferred_lifetime": self.preferred_lifetime,
