@@ -44,7 +44,7 @@ class Subscription(AppSubscription):
     """Root subscription class."""
 
 
-def public_field_filter(field: StrawberryField) -> bool:
+def public_field_filter(field: "StrawberryField") -> bool:
     """Public field filter.
 
     Example:

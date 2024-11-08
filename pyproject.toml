@@ -204,6 +204,11 @@ convention = "google"
 [tool.ruff.lint.flake8-pytest-style]
 fixture-parentheses = false
 
+# https://docs.astral.sh/ruff/settings/#lintflake8-type-checking
+[tool.ruff.lint.flake8-type-checking]
+# https://docs.astral.sh/ruff/settings/#lint_flake8-type-checking_quote-annotations
+quote-annotations = true
+
 # ---
 # Bandit
 # https://bandit.readthedocs.io/en/latest/config.html
