@@ -5,9 +5,9 @@ References:
 """
 
 from ipaddress import IPv4Address, IPv4Network, IPv6Address, IPv6Network
+from typing import TYPE_CHECKING
 
 import strawberry
-from strawberry.types.types import StrawberryObjectDefinition
 from strawberry_django.optimizer import DjangoOptimizerExtension
 
 from app.mutations import Mutation as AppMutation
@@ -25,6 +25,9 @@ from my_pydantic.scalars import (
 from my_pydantic.schema import Mutation as MyPydanticMutation
 from my_pydantic.schema import Query as MyPydanticQuery
 
+if TYPE_CHECKING:
+    from strawberry.types.field import StrawberryField
+
 
 @strawberry.type
 class Query(AppQuery, MyPydanticQuery):
@@ -41,7 +44,7 @@ class Subscription(AppSubscription):
     """Root subscription class."""
 
 
-def public_field_filter(field) -> bool:
+def public_field_filter(field: StrawberryField) -> bool:
     """Public field filter.
 
     Example:
@@ -70,7 +73,7 @@ def public_field_filter(field) -> bool:
 class PublicSchema(strawberry.Schema):
     """Override Schema class."""
 
-    def get_fields(self, type_definition: StrawberryObjectDefinition) -> list:  # type: ignore
+    def get_fields(self, type_definition) -> list:  # type: ignore
         """Override get_fields function."""
         return list(filter(public_field_filter, type_definition.fields))
 
