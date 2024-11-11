@@ -21,6 +21,7 @@ Table of Contents:
     - [Mypy](#mypy)
       - [~~Visual Studio Code~~](#visual-studio-code)
   - [GUIDES](#guides)
+    - [Accessing parent’s data in resolvers](#accessing-parents-data-in-resolvers)
     - [Schema export](#schema-export)
     - [~~Authentication~~](#authentication)
   - [TYPE](#type)
@@ -81,6 +82,32 @@ Refer to [here](https://strawberry.rocks/docs/editors/mypy).
 `Mypy` 를 사용하므로 무시합니다.
 
 ## GUIDES
+
+### [Accessing parent’s data in resolvers](https://strawberry.rocks/docs/guides/accessing-parent-data)
+
+`strawberry.Parent` 를 사용하여 상위 인스턴스에 접근할 수 있다.
+
+```python
+import strawberry
+
+
+@strawberry.type
+class User:
+    first_name: str
+    last_name: str
+
+    # Does not working.
+    # 코드 init 시, 타입 참조 오류가 발생하여 동작하지 않는다.
+    # @strawberry.field
+    # @staticmethod
+    # def full_name(parent: strawberry.Parent[User]) -> str:
+    #     return f"{parent.first_name} {parent.last_name}"
+
+    # Does working.
+    @strawberry.field
+    def full_name(self) -> str:
+        return f"{self.first_name} {self.last_name}"
+```
 
 ### Schema export
 

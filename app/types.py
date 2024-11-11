@@ -3,10 +3,10 @@
 References:
     https://strawberry-graphql.github.io/strawberry-django/guide/types/
     https://strawberry-graphql.github.io/strawberry-django/guide/fields/#defining-types-for-auto-fields
+    https://strawberry.rocks/docs/guides/accessing-parent-data
 """
 
 # from datetime import datetime
-
 import strawberry
 import strawberry_django
 from django.contrib.auth import get_user_model
@@ -176,6 +176,13 @@ class User:
     username: auto
     email: auto
     password: auto
+    first_name: str
+    last_name: str
+
+    @strawberry.field
+    def full_name(self) -> str:
+        """Get the full name."""
+        return f"{self.first_name} {self.last_name}"
 
 
 @strawberry_django.type(get_user_model(), field_cls=CustomStrawberryDjangoField)
