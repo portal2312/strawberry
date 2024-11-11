@@ -14,44 +14,68 @@ from ..pydantic.models import Option, Parameter, Subnet6
 
 @pytest.fixture
 def ipv4_address_str() -> str:
-    """IPv4Address string."""
+    """IPv4 address string."""
     return "8.8.8.8"
 
 
 @pytest.fixture
-def ipv4_address(ipv4_address_str: str) -> IPv4Address:
-    """IPv4Address string."""
-    return IPv4Address(ipv4_address_str)
-
-
-@pytest.fixture
-def ipv6_address_str() -> str:
-    """IPv6Address string."""
-    return "2001:4860:4860::8888"
-
-
-@pytest.fixture
-def ipv6_address(ipv6_address_str: str) -> IPv6Address:
-    """IPv4Address string."""
-    return IPv6Address(ipv6_address_str)
-
-
-@pytest.fixture
 def ipv4_network_str() -> str:
-    """IPv4Network string."""
+    """IPv4 network string."""
     return "8.8.8.0/24"
 
 
 @pytest.fixture
+def ipv4_low_address_str() -> str:
+    """IPv4 low address string."""
+    return "8.8.8.1"
+
+
+@pytest.fixture
+def ipv4_high_address_str() -> str:
+    """IPv4 high address string."""
+    return "8.8.8.254"
+
+
+@pytest.fixture
+def ipv4_address(ipv4_address_str: str) -> IPv4Address:
+    """IPv4 address."""
+    return IPv4Address(ipv4_address_str)
+
+
+@pytest.fixture
 def ipv4_network(ipv4_network_str: str) -> IPv4Network:
-    """IPv4Network."""
+    """IPv4 network."""
     return IPv4Network(ipv4_network_str)
 
 
 @pytest.fixture
+def ipv6_address_str() -> str:
+    """IPv6 address string."""
+    return "2001:4860:4860::8888"
+
+
+@pytest.fixture
 def ipv6_network_str() -> str:
-    """IPv6Network string."""
-    return "2001:4860:4860::/64"
+    """IPv6 network string."""
+    return "2001:4860:4860::/112"
+
+
+@pytest.fixture
+def ipv6_low_address_str() -> str:
+    """IPv6 low address string."""
+    return "2001:4860:4860::1"
+
+
+@pytest.fixture
+def ipv6_high_address_str() -> str:
+    """IPv6 high address string."""
+    return "2001:4860:4860::fffe"
+
+
+@pytest.fixture
+def ipv6_address(ipv6_address_str: str) -> IPv6Address:
+    """IPv6 address string."""
+    return IPv6Address(ipv6_address_str)
 
 
 @pytest.fixture
@@ -187,3 +211,21 @@ def shared_network_subnets_list(ipv6_network) -> list[list[Subnet6] | None]:
         ],
         None,
     ]
+
+
+@pytest.fixture
+def iana_low_address(ipv6_low_address_str: str) -> IPv6Address:
+    """IANA low_address."""
+    return IPv6Address(ipv6_low_address_str)
+
+
+@pytest.fixture
+def iana_high_address(ipv6_high_address_str: str) -> IPv6Address:
+    """IANA high address."""
+    return IPv6Address(ipv6_high_address_str)
+
+
+@pytest.fixture
+def iana_klass_list() -> list[str]:
+    """IANA klass."""
+    return ["default"]

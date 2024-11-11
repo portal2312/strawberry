@@ -135,6 +135,17 @@ class Bind(AbstractBaseModel):
     ip6_address: IPv6Address
 
 
+class IANA(AbstractBaseModel):
+    """Dynamic Host Configuration Protocol IANA."""
+
+    low_address: IPv6Address
+    high_address: IPv6Address
+    klass: str = Field(default="")
+    option: Option | None = Field(default=None)
+    parameter: Parameter | None = Field(default=None)
+    binds: list[Bind] | None = Field(default=None)
+
+
 class Subnet6(AbstractBaseModel):
     """Subnet IPv6Network.
 

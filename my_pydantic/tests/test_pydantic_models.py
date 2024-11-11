@@ -7,20 +7,24 @@ References:
 
 import re
 from ipaddress import IPv4Address, IPv6Address, IPv6Network
+from typing import TYPE_CHECKING
 
-from pydantic import BaseModel, ValidationError
-from pydantic.fields import FieldInfo
+from pydantic import ValidationError
 
-from ..pydantic.models import Bind, Option, Parameter, SharedNetwork, Subnet6
+from ..pydantic.models import IANA, Bind, Option, Parameter, SharedNetwork, Subnet6
+
+if TYPE_CHECKING:
+    from pydantic import BaseModel
+    from pydantic.fields import FieldInfo
 
 
-def get_model_field_attr(model: type[BaseModel], field_name: str, attr_name: str):
+def get_model_field_attr(model: type["BaseModel"], field_name: str, attr_name: str):
     """Get field attribute."""
     field = model.model_fields[field_name]
     return field._attributes_set.get(attr_name)
 
 
-def is_field_default_none(field: FieldInfo) -> bool:
+def is_field_default_none(field: "FieldInfo") -> bool:
     """Is field default attribute value None."""
     return (
         "default" in field._attributes_set and field._attributes_set["default"] is None
@@ -185,6 +189,37 @@ class TestBind:
                 ip6_address=ip6_address,
             )
             assert isinstance(bind, Bind)
+
+
+class TestIANA:
+    """Test IANA."""
+
+    def test_low_address(
+        self,
+        iana_low_address: IPv6Address,
+        iana_high_address: IPv6Address,
+        iana_klass_list: list[str],
+        shared_network_option_list: list[Option],
+        shared_network_parameter_list: list[Parameter],
+        duid_list,
+        iaid_list,
+    ):
+        """Test low_address field."""
+        iana = IANA(
+            low_address=iana_low_address,
+            high_address=iana_high_address,
+            klass=iana_klass_list[0],
+            option=shared_network_option_list[0],
+            parameter=shared_network_parameter_list[0],
+            binds=[
+                Bind(
+                    duid=duid_list[0],
+                    iaid=iaid_list[0],
+                    ip6_address=IPv6Address("::2"),
+                ),
+            ],
+        )
+        assert isinstance(iana, IANA)
 
 
 class TestSubnet6:
