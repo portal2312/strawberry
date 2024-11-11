@@ -1,11 +1,25 @@
-"""App app subscriptions."""
+"""App app subscriptions.
+
+References:
+    https://strawberry.rocks/docs/general/subscriptions
+"""
 
 import asyncio
 import asyncio.subprocess as subprocess
 from asyncio import streams
-from typing import Any, AsyncGenerator, AsyncIterator, Coroutine, Optional
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    AsyncGenerator,
+    AsyncIterator,
+    Coroutine,
+    Optional,
+)
 
 import strawberry
+
+if TYPE_CHECKING:
+    pass
 
 
 async def wait_for_call(coro: Coroutine[Any, Any, bytes]) -> Optional[bytes]:
@@ -65,11 +79,5 @@ class Subscription:
         self, info: strawberry.Info, target: int = 100
     ) -> AsyncGenerator[str, None]:
         """Run command."""
-        # user: User = info.context.get("user")
-        # if user and user.is_authenticated:
-        #     proc = await exec_proc(target)
-        #     return tail(proc)
-        # else:
-        #     raise PermissionDenied("권한이 없습니다.")
         proc = await exec_proc(target)
         return tail(proc)

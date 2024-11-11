@@ -2,10 +2,13 @@
 
 References:
     https://strawberry.rocks/docs/types/schema#filteringcustomising-fields
+    https://strawberry.rocks/docs/general/subscriptions
 """
 
+import asyncio
 from ipaddress import IPv4Address, IPv4Network, IPv6Address, IPv6Network
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, AsyncGenerator
+from uuid import uuid4
 
 import strawberry
 from strawberry_django.optimizer import DjangoOptimizerExtension
@@ -39,9 +42,36 @@ class Mutation(AppMutation, MyPydanticMutation):
     """Root mutation class."""
 
 
+event_messages = {}
+
+
 @strawberry.type
 class Subscription(AppSubscription):
     """Root subscription class."""
+
+    @strawberry.subscription
+    async def count(self, target: int = 100) -> AsyncGenerator[int, None]:
+        """Count."""
+        for i in range(target):
+            yield i
+            await asyncio.sleep(0.5)
+
+    @strawberry.subscription
+    async def message(self) -> AsyncGenerator[int, None]:
+        try:
+            subscription_id = uuid4()
+
+            event_messages[subscription_id] = []
+
+            while True:
+                if len(event_messages[subscription_id]) > 0:
+                    yield event_messages[subscription_id]
+                    event_messages[subscription_id].clear()
+
+                await asyncio.sleep(1)
+        except asyncio.CancelledError:
+            # stop listening to events
+            del event_messages[subscription_id]
 
 
 def public_field_filter(field: "StrawberryField") -> bool:
