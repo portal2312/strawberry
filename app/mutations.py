@@ -1,10 +1,12 @@
-"""App app mutations."""
+"""App app mutations.
 
-from typing import Annotated, Union
+References:
+    https://strawberry.rocks/docs/guides/authentication
+"""
 
 import strawberry
 
-from .types import User
+from .types import LoginError, LoginResult, LoginSuccess, User
 
 # @strawberry.type
 # class FruitMutations:
@@ -23,25 +25,6 @@ from .types import User
 #     ],
 # ) -> Fruit:
 #     return Fruit(id=id, weight=weight)
-
-
-@strawberry.type
-class LoginSuccess:
-    """Login success."""
-
-    user: User
-
-
-@strawberry.type
-class LoginError:
-    """Login error."""
-
-    message: str
-
-
-LoginResult = Annotated[
-    Union[LoginSuccess, LoginError], strawberry.union("LoginResult")
-]
 
 
 @strawberry.type

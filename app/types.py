@@ -7,6 +7,8 @@ References:
 """
 
 # from datetime import datetime
+from typing import Annotated, Union
+
 import strawberry
 import strawberry_django
 from django.contrib.auth import get_user_model
@@ -176,8 +178,8 @@ class User:
     username: auto
     email: auto
     password: auto
-    first_name: str
-    last_name: str
+    first_name: str = strawberry.field(default="")
+    last_name: str = strawberry.field(default="")
 
     @strawberry.field
     def full_name(self) -> str:
@@ -191,3 +193,22 @@ class User2:
 
     id: auto
     username: auto
+
+
+@strawberry.type
+class LoginSuccess:
+    """Login success."""
+
+    user: User
+
+
+@strawberry.type
+class LoginError:
+    """Login error."""
+
+    message: str
+
+
+LoginResult = Annotated[
+    Union[LoginSuccess, LoginError], strawberry.union("LoginResult")
+]
