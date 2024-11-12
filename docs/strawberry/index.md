@@ -30,8 +30,6 @@ Table of Contents:
       - [Methods](#methods)
       - [Handling execution errors](#handling-execution-errors)
       - [Filtering/customising fields](#filteringcustomising-fields)
-  - [INTEGRATIONS](#integrations)
-    - [Django](#django)
 
 ## Getting started
 
@@ -158,15 +156,3 @@ await schema.execute("query Q { colors { name} }")
 #### Filtering/customising fields
 
 Refer to [here](https://strawberry.rocks/docs/types/schema).
-
-## INTEGRATIONS
-
-### Django
-
-`Django` 하위 `Extending the view` 은 동작하지 않습니다.
-
-`Async Django` 하위 `Extending the view` 은 동작하지 않습니다.
-
-본문의 내용은 간략하게 읽고 [여기](https://strawberry-graphql.github.io/strawberry-django/quick-start/) 참조해야 합니다.
-
-Refer to [here](https://strawberry.rocks/docs/integrations/django).

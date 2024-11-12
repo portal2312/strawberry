@@ -24,3 +24,6 @@ schema.graphql
 # Default cache directory name for pytest.
 # https://docs.pytest.org/en/7.1.x/reference/customize.html#initialization-determining-rootdir-and-configfile
 **/.pytest_cache
+
+# pytest-cov coverage report file name.
+.coverage

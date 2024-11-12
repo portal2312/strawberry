@@ -1,5 +1,6 @@
 {
   "cSpell.words": [
+    "asyncio",
     "conlist",
     "coro",
     "debugpy",
@@ -17,6 +18,7 @@
     "resolv",
     "usefixtures",
     "WSGI",
+    "xdist",
     "zfunc"
   ],
   "sqltools.connections": [

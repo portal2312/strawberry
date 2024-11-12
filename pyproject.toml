@@ -13,7 +13,6 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "^3.12"
 django = "^5.1.3"
-django-debug-toolbar = "^4.3.0"
 channels = "^4.1.0"
 daphne = "^4.1.2"
 strawberry-graphql = "^0.248.0"
@@ -27,20 +26,16 @@ pydantic = "^2.8.2"
 debugpy = "^1.8.1"
 mypy = "^1.13.0"
 django-stubs = "^5.1.1"
-ruff = "^0.4.5"
+ruff = "^0.11.4"
 jupyterlab = "^4.2.0"
 pyyaml = "^6.0.1"
-bandit = { extras = ["toml"], version = "^1.7.8" }
-pytest = "^8.3.2"
-pytest-django = "^4.8.0"
-flake8-pytest-style = "^2.0.0"
+pytest = "^8.3.5"
+pytest-xdist = "^3.6.1"
+pytest-django = "^4.11.1"
+django-debug-toolbar = "^5.1.0"
 
-[tool.poetry.group.test]
-optional = true
-
-[tool.poetry.group.test.dependencies]
-pytest = "*"
-
+pytest-watch = "^4.2.0"
+pytest-cov = "^6.1.1"
 [tool.poetry.group.docs]
 optional = true
 
@@ -96,15 +91,9 @@ django_settings_module = "project.settings"
 
 # ---
 # Ruff
-#
-# References:
-# - [Default configuratoin](https://docs.astral.sh/ruff/configuration/)
-# - [Ruff extension for VSCode](https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff)
-#
-# Top-level
-# https://docs.astral.sh/ruff/settings/#top-level
+# https://docs.astral.sh/ruff/configuration/
 [tool.ruff]
-# Exclude a variety of commonly ignored directories.
+# https://docs.astral.sh/ruff/settings/#exclude
 exclude = [
     ".bzr",
     ".direnv",
@@ -134,71 +123,64 @@ exclude = [
     "venv",
     "**/migrations",
 ]
-extend-include = [
-    # https://docs.astral.sh/ruff/faq/#does-ruff-support-jupyter-notebooks
-    "*.ipynb",
-]
 
 # https://docs.astral.sh/ruff/settings/#lint
 [tool.ruff.lint]
-select = [
-    # pydocstyle (D)
+# https://docs.astral.sh/ruff/settings/#lint_dummy-variable-rgx
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+# https://docs.astral.sh/ruff/settings/#lint_extend-select
+extend-select = [
+    # flake8-bandit
+    # https://docs.astral.sh/ruff/rules/#flake8-bandit-s
+    "S",
+    # fake8-django
+    # https://docs.astral.sh/ruff/rules/#flake8-django-dj
+    "DJ",
+    # flake8-pytest-style
+    # https://docs.astral.sh/ruff/rules/#flake8-pyi-pyi
+    "PT",
+    # flake8-type-checking
+    # https://docs.astral.sh/ruff/rules/#flake8-type-checking-tc
+    "TC",
+    # Isort
+    # https://docs.astral.sh/ruff/rules/#isort-i
+    "I",
+    # Pycodestyle
+    # https://docs.astral.sh/ruff/rules/#pycodestyle-e-w
+    "E",
+    "W",
+    # Pydoclint
+    # https://docs.astral.sh/ruff/rules/#pydoclint-doc
+    "DOC",
+    # Pydocstyle
     # https://docs.astral.sh/ruff/rules/#pydocstyle-d
     "D",
-    # pydocstyle (E, W)
-    # https://docs.astral.sh/ruff/rules/#pycodestyle-e-w
-    "E4",
-    "E7",
-    "E9",
-    # Pyflakes (F)
+    # Pyflakes
     # https://docs.astral.sh/ruff/rules/#pyflakes-f
     "F",
-    # flake8-pytest-style (PT)
-    # https://docs.astral.sh/ruff/rules/#flake8-pyi-pyi
-    "PT"
+    # Pylint
+    # https://docs.astral.sh/ruff/rules/#pylint-pl
+    "PL"
 ]
+# https://docs.astral.sh/ruff/settings/#lint_ignore
 ignore = [
     # https://docs.astral.sh/ruff/rules/undocumented-public-class/#undocumented-public-class-d101
     "D101",
     # https://docs.astral.sh/ruff/rules/multi-line-summary-first-line/#multi-line-summary-first-line-d212
     "D212",
+    # https://docs.astral.sh/ruff/rules/assert/#assert-s101
+    "S101",
+    # https://docs.astral.sh/ruff/rules/undocumented-param/#undocumented-param-d417
+    "D417",
 ]
-# Allow fix for all enabled rules (when `--fix`) is provided.
-fixable = ["ALL"]
-unfixable = []
-# Allow unused variables when underscore-prefixed.
-dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
-
-[tool.ruff.format]
-# Like Black, use double quotes for strings.
-quote-style = "double"
-# Like Black, indent with spaces, rather than tabs.
-indent-style = "space"
-# Like Black, respect magic trailing commas.
-skip-magic-trailing-comma = false
-# Like Black, automatically detect the appropriate line ending.
-line-ending = "auto"
-# Enable auto-formatting of code examples in docstrings. Markdown,
-# reStructuredText code/literal blocks and doctests are all supported.
-#
-# This is currently disabled by default, but it is planned for this
-# to be opt-out in the future.
-docstring-code-format = false
-# Set the line length limit used when formatting code snippets in
-# docstrings.
-#
-# This only has an effect when the `docstring-code-format` setting is
-# enabled.
-docstring-code-line-length = "dynamic"
+# https://docs.astral.sh/ruff/settings/#lint_unfixable
+unfixable = ["D417"]
 
 # https://docs.astral.sh/ruff/settings/#lint_per-file-ignores
 [tool.ruff.lint.per-file-ignores]
-# https://docs.astral.sh/ruff/configuration/#jupyter-notebook-discovery
-"*.ipynb" = ["D", "F"]
 
-# https://docs.astral.sh/ruff/settings/#lintpydocstyle
-[tool.ruff.lint.pydocstyle]
-convention = "google"
+# https://docs.astral.sh/ruff/settings/#lintflake8-bandit
+[tool.ruff.lint.flake8-bandit]
 
 # https://docs.astral.sh/ruff/settings/#lintflake8-pytest-style
 [tool.ruff.lint.flake8-pytest-style]
@@ -206,372 +188,24 @@ fixture-parentheses = false
 
 # https://docs.astral.sh/ruff/settings/#lintflake8-type-checking
 [tool.ruff.lint.flake8-type-checking]
-# https://docs.astral.sh/ruff/settings/#lint_flake8-type-checking_quote-annotations
 quote-annotations = true
 
-# ---
-# Bandit
-# https://bandit.readthedocs.io/en/latest/config.html
-[tool.bandit]
+# https://docs.astral.sh/ruff/settings/#lintisort
+[tool.ruff.lint.isort]
+lines-between-types = 1
 
-[tool.bandit.any_other_function_with_shell_equals_true]
-no_shell = [
-    "os.execl",
-    "os.execle",
-    "os.execlp",
-    "os.execlpe",
-    "os.execv",
-    "os.execve",
-    "os.execvp",
-    "os.execvpe",
-    "os.spawnl",
-    "os.spawnle",
-    "os.spawnlp",
-    "os.spawnlpe",
-    "os.spawnv",
-    "os.spawnve",
-    "os.spawnvp",
-    "os.spawnvpe",
-    "os.startfile",
-]
-shell = [
-    "os.system",
-    "os.popen",
-    "os.popen2",
-    "os.popen3",
-    "os.popen4",
-    "popen2.popen2",
-    "popen2.popen3",
-    "popen2.popen4",
-    "popen2.Popen3",
-    "popen2.Popen4",
-    "commands.getoutput",
-    "commands.getstatusoutput",
-    "subprocess.getoutput",
-    "subprocess.getstatusoutput",
-]
-subprocess = [
-    "subprocess.Popen",
-    "subprocess.call",
-    "subprocess.check_call",
-    "subprocess.check_output",
-    "subprocess.run",
-]
+# https://docs.astral.sh/ruff/settings/#lintpycodestyle
+[tool.ruff.lint.pycodestyle]
 
-[tool.bandit.assert_used]
-skips = []
+# https://docs.astral.sh/ruff/settings/#lintpydoclint
+[tool.ruff.lint.pydoclint]
 
-[tool.bandit.hardcoded_tmp_directory]
-tmp_dirs = ["/tmp", "/var/tmp", "/dev/shm"]
+# https://docs.astral.sh/ruff/settings/#lintpydocstyle
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
-[tool.bandit.linux_commands_wildcard_injection]
-no_shell = [
-    "os.execl",
-    "os.execle",
-    "os.execlp",
-    "os.execlpe",
-    "os.execv",
-    "os.execve",
-    "os.execvp",
-    "os.execvpe",
-    "os.spawnl",
-    "os.spawnle",
-    "os.spawnlp",
-    "os.spawnlpe",
-    "os.spawnv",
-    "os.spawnve",
-    "os.spawnvp",
-    "os.spawnvpe",
-    "os.startfile",
-]
-shell = [
-    "os.system",
-    "os.popen",
-    "os.popen2",
-    "os.popen3",
-    "os.popen4",
-    "popen2.popen2",
-    "popen2.popen3",
-    "popen2.popen4",
-    "popen2.Popen3",
-    "popen2.Popen4",
-    "commands.getoutput",
-    "commands.getstatusoutput",
-    "subprocess.getoutput",
-    "subprocess.getstatusoutput",
-]
-subprocess = [
-    "subprocess.Popen",
-    "subprocess.call",
-    "subprocess.check_call",
-    "subprocess.check_output",
-    "subprocess.run",
-]
+# https://docs.astral.sh/ruff/settings/#lintpyflakes
+[tool.ruff.lint.pyflakes]
 
-[tool.bandit.ssl_with_bad_defaults]
-bad_protocol_versions = [
-    "PROTOCOL_SSLv2",
-    "SSLv2_METHOD",
-    "SSLv23_METHOD",
-    "PROTOCOL_SSLv3",
-    "PROTOCOL_TLSv1",
-    "SSLv3_METHOD",
-    "TLSv1_METHOD",
-    "PROTOCOL_TLSv1_1",
-    "TLSv1_1_METHOD",
-]
-
-[tool.bandit.ssl_with_bad_version]
-bad_protocol_versions = [
-    "PROTOCOL_SSLv2",
-    "SSLv2_METHOD",
-    "SSLv23_METHOD",
-    "PROTOCOL_SSLv3",
-    "PROTOCOL_TLSv1",
-    "SSLv3_METHOD",
-    "TLSv1_METHOD",
-    "PROTOCOL_TLSv1_1",
-    "TLSv1_1_METHOD",
-]
-
-[tool.bandit.start_process_with_a_shell]
-no_shell = [
-    "os.execl",
-    "os.execle",
-    "os.execlp",
-    "os.execlpe",
-    "os.execv",
-    "os.execve",
-    "os.execvp",
-    "os.execvpe",
-    "os.spawnl",
-    "os.spawnle",
-    "os.spawnlp",
-    "os.spawnlpe",
-    "os.spawnv",
-    "os.spawnve",
-    "os.spawnvp",
-    "os.spawnvpe",
-    "os.startfile",
-]
-shell = [
-    "os.system",
-    "os.popen",
-    "os.popen2",
-    "os.popen3",
-    "os.popen4",
-    "popen2.popen2",
-    "popen2.popen3",
-    "popen2.popen4",
-    "popen2.Popen3",
-    "popen2.Popen4",
-    "commands.getoutput",
-    "commands.getstatusoutput",
-    "subprocess.getoutput",
-    "subprocess.getstatusoutput",
-]
-subprocess = [
-    "subprocess.Popen",
-    "subprocess.call",
-    "subprocess.check_call",
-    "subprocess.check_output",
-    "subprocess.run",
-]
-
-[tool.bandit.start_process_with_no_shell]
-no_shell = [
-    "os.execl",
-    "os.execle",
-    "os.execlp",
-    "os.execlpe",
-    "os.execv",
-    "os.execve",
-    "os.execvp",
-    "os.execvpe",
-    "os.spawnl",
-    "os.spawnle",
-    "os.spawnlp",
-    "os.spawnlpe",
-    "os.spawnv",
-    "os.spawnve",
-    "os.spawnvp",
-    "os.spawnvpe",
-    "os.startfile",
-]
-shell = [
-    "os.system",
-    "os.popen",
-    "os.popen2",
-    "os.popen3",
-    "os.popen4",
-    "popen2.popen2",
-    "popen2.popen3",
-    "popen2.popen4",
-    "popen2.Popen3",
-    "popen2.Popen4",
-    "commands.getoutput",
-    "commands.getstatusoutput",
-    "subprocess.getoutput",
-    "subprocess.getstatusoutput",
-]
-subprocess = [
-    "subprocess.Popen",
-    "subprocess.call",
-    "subprocess.check_call",
-    "subprocess.check_output",
-    "subprocess.run",
-]
-
-[tool.bandit.start_process_with_partial_path]
-no_shell = [
-    "os.execl",
-    "os.execle",
-    "os.execlp",
-    "os.execlpe",
-    "os.execv",
-    "os.execve",
-    "os.execvp",
-    "os.execvpe",
-    "os.spawnl",
-    "os.spawnle",
-    "os.spawnlp",
-    "os.spawnlpe",
-    "os.spawnv",
-    "os.spawnve",
-    "os.spawnvp",
-    "os.spawnvpe",
-    "os.startfile",
-]
-shell = [
-    "os.system",
-    "os.popen",
-    "os.popen2",
-    "os.popen3",
-    "os.popen4",
-    "popen2.popen2",
-    "popen2.popen3",
-    "popen2.popen4",
-    "popen2.Popen3",
-    "popen2.Popen4",
-    "commands.getoutput",
-    "commands.getstatusoutput",
-    "subprocess.getoutput",
-    "subprocess.getstatusoutput",
-]
-subprocess = [
-    "subprocess.Popen",
-    "subprocess.call",
-    "subprocess.check_call",
-    "subprocess.check_output",
-    "subprocess.run",
-]
-
-[tool.bandit.subprocess_popen_with_shell_equals_true]
-no_shell = [
-    "os.execl",
-    "os.execle",
-    "os.execlp",
-    "os.execlpe",
-    "os.execv",
-    "os.execve",
-    "os.execvp",
-    "os.execvpe",
-    "os.spawnl",
-    "os.spawnle",
-    "os.spawnlp",
-    "os.spawnlpe",
-    "os.spawnv",
-    "os.spawnve",
-    "os.spawnvp",
-    "os.spawnvpe",
-    "os.startfile",
-]
-shell = [
-    "os.system",
-    "os.popen",
-    "os.popen2",
-    "os.popen3",
-    "os.popen4",
-    "popen2.popen2",
-    "popen2.popen3",
-    "popen2.popen4",
-    "popen2.Popen3",
-    "popen2.Popen4",
-    "commands.getoutput",
-    "commands.getstatusoutput",
-    "subprocess.getoutput",
-    "subprocess.getstatusoutput",
-]
-subprocess = [
-    "subprocess.Popen",
-    "subprocess.call",
-    "subprocess.check_call",
-    "subprocess.check_output",
-    "subprocess.run",
-]
-
-[tool.bandit.subprocess_without_shell_equals_true]
-no_shell = [
-    "os.execl",
-    "os.execle",
-    "os.execlp",
-    "os.execlpe",
-    "os.execv",
-    "os.execve",
-    "os.execvp",
-    "os.execvpe",
-    "os.spawnl",
-    "os.spawnle",
-    "os.spawnlp",
-    "os.spawnlpe",
-    "os.spawnv",
-    "os.spawnve",
-    "os.spawnvp",
-    "os.spawnvpe",
-    "os.startfile",
-]
-shell = [
-    "os.system",
-    "os.popen",
-    "os.popen2",
-    "os.popen3",
-    "os.popen4",
-    "popen2.popen2",
-    "popen2.popen3",
-    "popen2.popen4",
-    "popen2.Popen3",
-    "popen2.Popen4",
-    "commands.getoutput",
-    "commands.getstatusoutput",
-    "subprocess.getoutput",
-    "subprocess.getstatusoutput",
-]
-subprocess = [
-    "subprocess.Popen",
-    "subprocess.call",
-    "subprocess.check_call",
-    "subprocess.check_output",
-    "subprocess.run",
-]
-
-[tool.bandit.try_except_continue]
-check_typed_exception = false
-
-[tool.bandit.try_except_pass]
-check_typed_exception = false
-
-[tool.bandit.weak_cryptographic_key]
-weak_key_size_dsa_high = 1024
-weak_key_size_dsa_medium = 2048
-weak_key_size_ec_high = 160
-weak_key_size_ec_medium = 224
-weak_key_size_rsa_high = 1024
-weak_key_size_rsa_medium = 2048
-
-# ---
-# pytest
-# https://docs.pytest.org/en/stable/reference/customize.html
-[tool.pytest.ini_options]
-# https://pytest-django.readthedocs.io/en/latest/tutorial.html
-DJANGO_SETTINGS_MODULE = "project.settings"
-python_files = ["tests.py", "test_*.py", "*_test.py"]
+# https://docs.astral.sh/ruff/settings/#lintpylint
+[tool.ruff.lint.pylint]
