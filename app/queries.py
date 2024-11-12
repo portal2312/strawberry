@@ -45,4 +45,5 @@ class Query:
     @strawberry.field
     def hello(self, info: strawberry.Info) -> str:
         """Hello world."""
+        print(info.context["request"].consumer.scope["user"])
         return "world"

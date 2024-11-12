@@ -6,13 +6,17 @@
     "dhcpd",
     "DUID",
     "fffe",
+    "Graphi",
     "iaid",
     "Initialising",
     "nameserver",
     "nbconvert",
     "objtype",
+    "QLHTTP",
+    "QLWS",
     "resolv",
     "usefixtures",
+    "WSGI",
     "zfunc"
   ],
   "sqltools.connections": [

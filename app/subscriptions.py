@@ -30,7 +30,7 @@ async def wait_for_call(coro: Coroutine[Any, Any, bytes]) -> Optional[bytes]:
     there are no `\n` line chars in the stream the function will never exit
     """
     try:
-        return await asyncio.wait_for(coro(), timeout=0.1)
+        return await asyncio.wait_for(coro(), timeout=0.1)  # type: ignore
     except asyncio.TimeoutError:
         return None
 
@@ -38,7 +38,7 @@ async def wait_for_call(coro: Coroutine[Any, Any, bytes]) -> Optional[bytes]:
 async def lines(stream: streams.StreamReader) -> AsyncIterator[str]:
     """Lines reads all lines from the provided stream, decoding them as UTF-8 strings."""
     while True:
-        b = await wait_for_call(stream.readline)
+        b = await wait_for_call(stream.readline)  # type: ignore
         if b:
             yield b.decode("UTF-8").rstrip()
         else:
@@ -62,11 +62,11 @@ async def tail(proc: subprocess.Process) -> AsyncGenerator[str, None]:
     # to read a line from stdout. This is a good example of why you need to
     # be defensive by using asyncio.wait_for in wait_for_call().
     while proc.returncode is None:
-        async for line in lines(proc.stdout):
+        async for line in lines(proc.stdout):  # type: ignore
             yield line
     else:
         # read anything left on the pipe after the process has finished
-        async for line in lines(proc.stdout):
+        async for line in lines(proc.stdout):  # type: ignore
             yield line
 
 
@@ -79,5 +79,6 @@ class Subscription:
         self, info: strawberry.Info, target: int = 100
     ) -> AsyncGenerator[str, None]:
         """Run command."""
+        print(info.context["request"].scope["user"])
         proc = await exec_proc(target)
         return tail(proc)

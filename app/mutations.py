@@ -32,8 +32,14 @@ class Mutation:
     """App app root mutation class."""
 
     @strawberry.field
-    def strawberry_login(self, username: str, password: str) -> LoginResult:
+    def strawberry_login(
+        self,
+        info: strawberry.Info,
+        username: str,
+        password: str,
+    ) -> LoginResult:
         """Login."""
+        print(info.context["request"].consumer.scope["user"])
         if username != password:
             return LoginError(message="Something went wrong")
         return LoginSuccess(
